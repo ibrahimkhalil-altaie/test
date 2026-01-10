@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard | Students</title>
+    <title>لوحة الطالب | Student Dashboard</title>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;700&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            /* Vercel Theme Palette */
+            /* Vercel Theme Tokens */
             --bg: #000000;
             --fg: #ffffff;
             --gray-100: #111111;
@@ -16,12 +16,10 @@
             --gray-300: #444444;
             --gray-500: #888888;
             --gray-600: #999999;
-            --accents-1: #111;
-            --accents-2: #333;
-            --selection: #f81ce5; /* Vercel Pink highlight or Blue #0070f3 */
-            --blue: #0070f3;
-            --error: #e00;
-            --radius: 6px;
+            --amber: #ffb020;  /* للامتحانات */
+            --blue: #0070f3;   /* للروابط او التمييز */
+            --green: #21cf5f;  /* مؤشر التحديث */
+            --radius: 8px;
             --font: 'IBM Plex Sans Arabic', sans-serif;
         }
 
@@ -29,7 +27,6 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            outline: none;
             -webkit-tap-highlight-color: transparent;
         }
 
@@ -40,507 +37,253 @@
             display: flex;
             justify-content: center;
             min-height: 100vh;
-            padding: 24px;
+            padding: 24px 20px;
             font-size: 14px;
         }
 
-        /* --- Layout --- */
         .wrapper {
             width: 100%;
-            max-width: 640px;
+            max-width: 600px;
             display: flex;
             flex-direction: column;
-            gap: 24px;
+            gap: 32px;
         }
 
-        header {
+        /* --- Header Section (User Profile) --- */
+        .profile-header {
             display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding-bottom: 20px;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 12px;
+            padding-bottom: 24px;
             border-bottom: 1px solid var(--gray-200);
         }
 
-        header h1 {
-            font-size: 24px;
-            font-weight: 700;
-            letter-spacing: -0.5px;
-        }
-
-        .badge-count {
-            background: var(--gray-100);
-            border: 1px solid var(--gray-200);
-            color: var(--gray-500);
-            padding: 2px 8px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 500;
-        }
-
-        /* --- Forms --- */
-        .input-group {
+        .user-meta {
             display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-
-        .row {
-            display: flex;
+            align-items: center;
             gap: 12px;
         }
 
-        .row > * {
-            flex: 1;
-        }
-
-        label {
-            display: block;
-            color: var(--gray-500);
-            margin-bottom: 8px;
-            font-size: 12px;
-            font-weight: 500;
-        }
-
-        /* Vercel Input Style */
-        input, select {
-            width: 100%;
-            background: #000;
+        .avatar {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(180deg, var(--gray-100), var(--bg));
             border: 1px solid var(--gray-200);
-            color: var(--fg);
-            padding: 0 12px;
-            height: 40px;
-            border-radius: var(--radius);
-            font-family: var(--font);
-            font-size: 14px;
-            transition: border-color 0.15s ease, box-shadow 0.15s ease;
-            appearance: none; /* Remove default arrow */
-        }
-
-        input::placeholder {
-            color: var(--gray-500);
-        }
-
-        /* Vercel Focus State */
-        input:focus, select:focus {
-            border-color: var(--fg);
-            box-shadow: 0 0 0 1px var(--fg); /* Sharp white glow */
-        }
-
-        /* Custom Select Arrow */
-        .select-wrapper {
-            position: relative;
-        }
-        .select-wrapper::after {
-            content: '';
-            position: absolute;
-            left: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            border-left: 4px solid transparent;
-            border-right: 4px solid transparent;
-            border-top: 4px solid var(--gray-500);
-            pointer-events: none;
-        }
-
-        /* Vercel Primary Button */
-        .btn-primary {
-            background: var(--fg);
-            color: #000;
-            border: 1px solid var(--fg);
-            height: 40px;
-            border-radius: var(--radius);
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-        }
-
-        .btn-primary:hover {
-            background: transparent;
+            font-weight: 700;
+            font-size: 20px;
             color: var(--fg);
         }
 
-        .btn-primary:active {
-            transform: scale(0.98);
+        .user-info h1 {
+            font-size: 20px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+            line-height: 1.2;
+            color: var(--fg);
         }
 
-        /* --- List View --- */
-        .list-container {
-            border: 1px solid var(--gray-200);
-            border-radius: var(--radius);
-            overflow: hidden;
-            background: #000;
-        }
-
-        .list-header {
+        .grade-badge {
+            display: inline-flex;
+            margin-top: 6px;
+            padding: 4px 10px;
             background: var(--gray-100);
-            padding: 10px 16px;
-            border-bottom: 1px solid var(--gray-200);
-            color: var(--gray-500);
+            border: 1px solid var(--gray-200);
+            border-radius: 20px;
             font-size: 12px;
+            color: var(--gray-600);
+            font-weight: 500;
+        }
+
+        /* --- Status Bar --- */
+        .status-bar {
             display: flex;
             justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: -10px; /* تقليل المسافة بين العنوان والقائمة */
         }
 
-        .student-item {
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .update-time {
+            font-size: 12px;
+            color: var(--gray-500);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .dot {
+            width: 6px;
+            height: 6px;
+            background-color: var(--green);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--green);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.5; }
+            50% { opacity: 1; }
+            100% { opacity: 0.5; }
+        }
+
+        /* --- List View (Homework) --- */
+        .homework-list {
+            display: flex;
+            flex-direction: column;
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius);
+            background: #000;
+            overflow: hidden;
+        }
+
+        .list-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 16px;
+            padding: 18px 20px;
             border-bottom: 1px solid var(--gray-200);
-            transition: background 0.15s;
-            animation: fadeIn 0.3s ease;
+            transition: background 0.2s;
         }
 
-        .student-item:last-child {
+        .list-item:last-child {
             border-bottom: none;
         }
 
-        .student-item:hover {
-            background-color: var(--gray-100);
+        .list-item:hover {
+            background: var(--gray-100);
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(5px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .info-main {
+        .subject {
+            font-size: 14px;
             font-weight: 500;
-            font-size: 15px;
-            color: var(--fg);
-            margin-bottom: 4px;
-        }
-
-        .info-sub {
-            font-size: 13px;
             color: var(--gray-500);
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            width: 35%; /* مساحة ثابتة للاسم */
         }
 
-        .tag {
-            display: inline-flex;
-            align-items: center;
-            height: 20px;
-            padding: 0 6px;
-            border-radius: 4px;
-            font-size: 11px;
-            border: 1px solid var(--gray-200);
-            color: var(--gray-600);
-        }
-
-        /* 3 Dots Button */
-        .dots-btn {
-            background: transparent;
-            border: none;
-            color: var(--gray-500);
-            cursor: pointer;
-            padding: 8px;
-            border-radius: 4px;
-            transition: color 0.2s, background 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .dots-btn:hover {
+        .content {
+            font-size: 14px;
+            font-weight: 400;
             color: var(--fg);
-            background: var(--gray-200);
-        }
-
-        /* --- Modal (Vercel Style) --- */
-        .overlay {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.7);
-            backdrop-filter: blur(2px);
-            z-index: 99;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            transition: opacity 0.2s ease;
-        }
-        
-        .overlay.open {
+            width: 65%;
+            text-align: left; /* المحتوى باليسار لسهولة القراءة */
             display: flex;
-            opacity: 1;
-        }
-
-        .modal {
-            background: #0a0a0a;
-            border: 1px solid var(--gray-200);
-            width: 90%;
-            max-width: 400px;
-            border-radius: 12px;
-            padding: 24px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
-            transform: scale(0.95);
-            transition: transform 0.2s ease;
-        }
-
-        .overlay.open .modal {
-            transform: scale(1);
-        }
-
-        .modal-title {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 24px;
-            color: var(--fg);
-        }
-
-        .modal-actions {
-            display: flex;
-            gap: 12px;
-            margin-top: 24px;
             justify-content: flex-end;
         }
 
-        .btn-secondary {
-            background: transparent;
-            border: 1px solid var(--gray-200);
+        /* تنسيقات خاصة للحالات */
+        .text-dim {
             color: var(--gray-600);
-            height: 36px;
-            padding: 0 16px;
-            border-radius: var(--radius);
-            cursor: pointer;
-            transition: all 0.2s;
+            font-style: italic;
+            font-size: 13px;
         }
 
-        .btn-secondary:hover {
-            border-color: var(--fg);
-            color: var(--fg);
-        }
-        
-        .btn-save {
-            background: var(--fg);
-            color: black;
-            border: none;
-            height: 36px;
-            padding: 0 16px;
-            border-radius: var(--radius);
+        .badge-exam {
+            color: var(--amber);
+            border: 1px solid rgba(255, 176, 32, 0.2);
+            background: rgba(255, 176, 32, 0.1);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
             font-weight: 600;
-            cursor: pointer;
         }
 
-        /* Empty State */
-        .empty-state {
-            padding: 40px;
-            text-align: center;
-            color: var(--gray-500);
-            display: none;
-        }
-        
-        .empty-icon {
-            margin-bottom: 10px;
-            font-size: 24px;
-            opacity: 0.3;
+        .badge-lesson {
+            background: var(--gray-100);
+            border: 1px solid var(--gray-200);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: monospace; /* للأرقام الإنجليزية */
+            font-size: 12px;
         }
 
-        /* Mobile tweaks */
+        /* Mobile Adjustments */
         @media (max-width: 480px) {
-            .row {
-                flex-direction: column;
-                gap: 16px;
+            .profile-header {
+                flex-direction: row;
+                align-items: center;
+            }
+            .grade-badge {
+                margin-top: 4px;
             }
         }
     </style>
 </head>
 <body>
 
-<div class="wrapper">
-    <header>
-        <h1>الطلاب</h1>
-        <span class="badge-count" id="countBadge">0 طالب</span>
-    </header>
-
-    <div class="input-group">
-        <div>
-            <label>الاسم الكامل</label>
-            <input type="text" id="sName" placeholder="أدخل اسم الطالب الثلاثي..." autocomplete="off">
-        </div>
+    <div class="wrapper">
         
-        <div class="row">
-            <div class="select-wrapper" style="flex:1">
-                <label>المرحلة الدراسية</label>
-                <select id="sGrade">
-                    <option value="الرابع علمي">الرابع علمي</option>
-                    <option value="الخامس علمي">الخامس علمي</option>
-                    <option value="السادس علمي">السادس علمي</option>
-                </select>
+        <header class="profile-header">
+            <div class="user-meta">
+                <div class="avatar">أ</div>
+                <div class="user-info">
+                    <h1>ابراهيم خليل ابراهيم</h1>
+                    <span class="grade-badge">الرابع علمي - ألف</span>
+                </div>
             </div>
-            <div class="select-wrapper" style="flex:1">
-                <label>الشعبة</label>
-                <select id="sSection">
-                    <option value="أ">شعبة أ</option>
-                    <option value="ب">شعبة ب</option>
-                    <option value="ج">شعبة ج</option>
-                    <option value="د">شعبة د</option>
-                </select>
+        </header>
+
+        <div class="status-bar">
+            <h2 class="section-title">التحاضير اليومية</h2>
+            <div class="update-time">
+                <span class="dot"></span>
+                تم التحديث (اليوم) 3:29ص
             </div>
         </div>
 
-        <button class="btn-primary" onclick="addStudent()">
-            <span>إضافة طالب</span>
-            <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 2.75C8 2.47386 7.77614 2.25 7.5 2.25C7.22386 2.25 7 2.47386 7 2.75V7H2.75C2.47386 7 2.25 7.22386 2.25 7.5C2.25 7.77614 2.47386 8 2.75 8H7V12.25C7 12.5261 7.22386 12.75 7.5 12.75C7.77614 12.75 8 12.5261 8 12.25V8H12.25C12.5261 8 12.75 7.77614 12.75 7.5C12.75 7.22386 12.5261 7 12.25 7H8V2.75Z" fill="currentColor" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
-        </button>
+        <div class="homework-list">
+            
+            <div class="list-item">
+                <span class="subject">الكيمياء</span>
+                <span class="content text-dim">لا يوجد</span>
+            </div>
+
+            <div class="list-item">
+                <span class="subject">الفيزياء</span>
+                <span class="content text-dim">لا يوجد</span>
+            </div>
+
+            <div class="list-item">
+                <span class="subject">الاحياء</span>
+                <span class="content">ص12 إلى ص14</span>
+            </div>
+
+            <div class="list-item">
+                <span class="subject">العربي</span>
+                <span class="content"><span class="badge-exam">امتحان شهري</span></span>
+            </div>
+
+            <div class="list-item">
+                <span class="subject">الانكليزي</span>
+                <span class="content"><span class="badge-lesson">Units 1 / 2 / 3</span></span>
+            </div>
+
+            <div class="list-item">
+                <span class="subject">الاسلامية</span>
+                <span class="content">الحديث الشريف</span>
+            </div>
+
+            <div class="list-item">
+                <span class="subject">الكردي</span>
+                <span class="content text-dim">ترك. لا يوجد</span>
+            </div>
+
+            <div class="list-item">
+                <span class="subject">الرياضيات</span>
+                <span class="content">حل تمارين ص58</span>
+            </div>
+
+        </div>
+
     </div>
-
-    <div class="list-container">
-        <div class="list-header">
-            <span>الاسم والمعلومات</span>
-            <span>الإجراءات</span>
-        </div>
-        <div id="listContent">
-            </div>
-        <div class="empty-state" id="emptyState">
-            <div class="empty-icon">📂</div>
-            <div>لا توجد بيانات لعرضها حالياً</div>
-        </div>
-    </div>
-</div>
-
-<div class="overlay" id="modalOverlay">
-    <div class="modal">
-        <h3 class="modal-title">تعديل بيانات الطالب</h3>
-        <input type="hidden" id="editId">
-        
-        <div style="margin-bottom: 16px;">
-            <label>اسم الطالب</label>
-            <input type="text" id="editName" disabled style="color: var(--gray-500); cursor: not-allowed; background: var(--gray-100);">
-        </div>
-
-        <div class="row" style="margin-bottom: 16px;">
-            <div class="select-wrapper" style="flex:1">
-                <label>الصف</label>
-                <select id="editGrade">
-                    <option value="الرابع علمي">الرابع علمي</option>
-                    <option value="الخامس علمي">الخامس علمي</option>
-                    <option value="السادس علمي">السادس علمي</option>
-                </select>
-            </div>
-            <div class="select-wrapper" style="flex:1">
-                <label>الشعبة</label>
-                <select id="editSection">
-                    <option value="أ">أ</option>
-                    <option value="ب">ب</option>
-                    <option value="ج">ج</option>
-                    <option value="د">د</option>
-                </select>
-            </div>
-        </div>
-
-        <div class="modal-actions">
-            <button class="btn-secondary" onclick="closeModal()">إلغاء</button>
-            <button class="btn-save" onclick="saveEdit()">حفظ التغييرات</button>
-        </div>
-    </div>
-</div>
-
-<script>
-    let students = [];
-    const listContent = document.getElementById('listContent');
-    const emptyState = document.getElementById('emptyState');
-    const countBadge = document.getElementById('countBadge');
-    
-    // Modal Elements
-    const overlay = document.getElementById('modalOverlay');
-    const editIdInput = document.getElementById('editId');
-    const editGradeInput = document.getElementById('editGrade');
-    const editSectionInput = document.getElementById('editSection');
-
-    updateUI();
-
-    function addStudent() {
-        const nameInp = document.getElementById('sName');
-        const gradeInp = document.getElementById('sGrade');
-        const sectionInp = document.getElementById('sSection');
-        
-        if(!nameInp.value.trim()) {
-            nameInp.focus();
-            return;
-        }
-
-        const newStudent = {
-            id: Date.now(),
-            name: nameInp.value,
-            grade: gradeInp.value,
-            section: sectionInp.value
-        };
-
-        students.unshift(newStudent); // Add to top
-        updateUI();
-        
-        nameInp.value = '';
-    }
-
-    function updateUI() {
-        listContent.innerHTML = '';
-        countBadge.textContent = `${students.length} طالب`;
-
-        if(students.length === 0) {
-            emptyState.style.display = 'block';
-        } else {
-            emptyState.style.display = 'none';
-            students.forEach(s => {
-                const el = document.createElement('div');
-                el.className = 'student-item';
-                el.innerHTML = `
-                    <div>
-                        <div class="info-main">${s.name}</div>
-                        <div class="info-sub">
-                            <span class="tag">${s.grade}</span>
-                            <span class="tag" style="color:var(--fg)">${s.section}</span>
-                        </div>
-                    </div>
-                    <button class="dots-btn" onclick="openEdit(${s.id})">
-                        <svg width="20" height="20" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3.625 7.5C3.625 8.12132 3.12132 8.625 2.5 8.625C1.87868 8.625 1.375 8.12132 1.375 7.5C1.375 6.87868 1.87868 6.375 2.5 6.375C3.12132 6.375 3.625 6.87868 3.625 7.5ZM8.625 7.5C8.625 8.12132 8.12132 8.625 7.5 8.625C6.87868 8.625 6.375 8.12132 6.375 7.5C6.375 6.87868 6.87868 6.375 7.5 6.375C8.12132 6.375 8.625 6.87868 8.625 7.5ZM13.625 7.5C13.625 8.12132 13.121 8.625 12.5 8.625C11.879 8.625 11.375 8.12132 11.375 7.5C11.375 6.87868 11.879 6.375 12.5 6.375C13.121 6.375 13.625 6.87868 13.625 7.5Z" fill="currentColor" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
-                    </button>
-                `;
-                listContent.appendChild(el);
-            });
-        }
-    }
-
-    function openEdit(id) {
-        const s = students.find(x => x.id === id);
-        if(!s) return;
-
-        editIdInput.value = s.id;
-        document.getElementById('editName').value = s.name;
-        editGradeInput.value = s.grade;
-        editSectionInput.value = s.section;
-        
-        overlay.classList.add('open');
-    }
-
-    function closeModal() {
-        overlay.classList.remove('open');
-    }
-
-    function saveEdit() {
-        const id = Number(editIdInput.value);
-        const idx = students.findIndex(x => x.id === id);
-        
-        if(idx > -1) {
-            students[idx].grade = editGradeInput.value;
-            students[idx].section = editSectionInput.value;
-            updateUI();
-            closeModal();
-        }
-    }
-
-    // Close modal on outside click
-    overlay.addEventListener('click', (e) => {
-        if(e.target === overlay) closeModal();
-    });
-</script>
 
 </body>
 </html>
