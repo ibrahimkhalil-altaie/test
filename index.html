@@ -2,25 +2,37 @@
 <html lang="ar">
 <head>
   <meta charset="UTF-8">
-  <title>Dynamic ListView</title>
+  <title>قائمة طلاب ديناميكية</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      padding: 20px;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f7f8fa;
+      padding: 30px;
     }
 
     h1 {
       text-align: center;
+      margin-bottom: 20px;
     }
 
     #addBtn {
-      padding: 10px 20px;
-      margin-bottom: 20px;
+      display: block;
+      margin: 0 auto 30px auto;
+      padding: 10px 25px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
       cursor: pointer;
+      transition: background 0.3s;
+    }
+    #addBtn:hover {
+      background-color: #45a049;
     }
 
     #listContainer {
-      max-width: 500px;
+      max-width: 700px;
       margin: auto;
     }
 
@@ -28,82 +40,94 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 10px;
-      margin: 5px 0;
-      background-color: #f0f0f0;
-      border-radius: 5px;
+      padding: 12px 15px;
+      margin: 10px 0;
+      background-color: #ffffff;
+      border-radius: 10px;
+      box-shadow: 0px 3px 6px rgba(0,0,0,0.1);
+      transition: transform 0.2s;
+      position: relative;
+    }
+    .list-item:hover {
+      transform: translateY(-2px);
     }
 
-    .list-item:hover {
-      background-color: #e0e0e0;
+    .item-info {
+      display: flex;
+      gap: 20px;
+    }
+
+    .item-info div {
+      min-width: 100px;
     }
 
     .options-btn {
       cursor: pointer;
       padding: 5px 10px;
       border: none;
-      background-color: #ccc;
-      border-radius: 3px;
+      background-color: #e0e0e0;
+      border-radius: 5px;
+      font-weight: bold;
     }
 
     .options-menu {
       display: none;
       position: absolute;
+      top: 40px;
+      right: 15px;
       background-color: white;
       border: 1px solid #ddd;
-      box-shadow: 0px 2px 5px rgba(0,0,0,0.2);
+      box-shadow: 0px 2px 6px rgba(0,0,0,0.2);
       z-index: 100;
+      border-radius: 6px;
     }
 
     .options-menu button {
       display: block;
       width: 100%;
-      padding: 5px 10px;
+      padding: 8px 15px;
       border: none;
       background: none;
       cursor: pointer;
+      text-align: right;
     }
 
     .options-menu button:hover {
       background-color: #f0f0f0;
     }
 
-    .list-item-container {
-      position: relative;
-    }
-
   </style>
 </head>
 <body>
 
-  <h1>قائمة ديناميكية</h1>
-  <button id="addBtn">إضافة عنصر جديد</button>
-  
+  <h1>قائمة الطلاب</h1>
+  <button id="addBtn">إضافة طالب جديد</button>
+
   <div id="listContainer"></div>
 
   <script>
     const listContainer = document.getElementById('listContainer');
     const addBtn = document.getElementById('addBtn');
 
-    // البيانات الأولية
-    let items = [
-      { id: 1, text: "العنصر الأول" },
-      { id: 2, text: "العنصر الثاني" },
-      { id: 3, text: "العنصر الثالث" }
-    ];
+    let items = []; // لا يوجد عناصر مسبقًا
 
-    // دالة عرض العناصر
     function renderList() {
       listContainer.innerHTML = '';
+
       items.forEach(item => {
-        const container = document.createElement('div');
-        container.className = 'list-item-container';
+        const listItem = document.createElement('div');
+        listItem.className = 'list-item';
 
-        const div = document.createElement('div');
-        div.className = 'list-item';
-        div.textContent = item.text;
+        // معلومات الطالب
+        const infoDiv = document.createElement('div');
+        infoDiv.className = 'item-info';
+        infoDiv.innerHTML = `
+          <div><strong>الاسم:</strong> ${item.name}</div>
+          <div><strong>الصف:</strong> ${item.grade}</div>
+          <div><strong>الشعبة:</strong> ${item.section}</div>
+        `;
 
-        // زر الخيارات الثلاث نقاط
+        // زر الثلاث نقاط
         const optionsBtn = document.createElement('button');
         optionsBtn.className = 'options-btn';
         optionsBtn.textContent = '⋮';
@@ -111,21 +135,26 @@
         // قائمة الخيارات
         const menu = document.createElement('div');
         menu.className = 'options-menu';
-        const deleteBtn = document.createElement('button');
-        deleteBtn.textContent = 'حذف';
-        deleteBtn.addEventListener('click', () => {
-          items = items.filter(i => i.id !== item.id);
-          renderList();
-        });
 
         const editBtn = document.createElement('button');
         editBtn.textContent = 'تعديل';
         editBtn.addEventListener('click', () => {
-          const newText = prompt('أدخل النص الجديد:', item.text);
-          if(newText) {
-            item.text = newText;
+          const newName = prompt('الاسم:', item.name);
+          const newGrade = prompt('الصف:', item.grade);
+          const newSection = prompt('الشعبة:', item.section);
+          if(newName && newGrade && newSection){
+            item.name = newName;
+            item.grade = newGrade;
+            item.section = newSection;
             renderList();
           }
+        });
+
+        const deleteBtn = document.createElement('button');
+        deleteBtn.textContent = 'حذف';
+        deleteBtn.addEventListener('click', () => {
+          items = items.filter(i => i !== item);
+          renderList();
         });
 
         menu.appendChild(editBtn);
@@ -133,34 +162,35 @@
 
         optionsBtn.addEventListener('click', (e) => {
           e.stopPropagation();
-          document.querySelectorAll('.options-menu').forEach(m => m.style.display = 'none');
+          document.querySelectorAll('.options-menu').forEach(m => m.style.display='none');
           menu.style.display = 'block';
         });
 
-        container.appendChild(div);
-        container.appendChild(optionsBtn);
-        container.appendChild(menu);
-        listContainer.appendChild(container);
+        listItem.appendChild(infoDiv);
+        listItem.appendChild(optionsBtn);
+        listItem.appendChild(menu);
+        listContainer.appendChild(listItem);
       });
     }
 
-    // إغلاق قائمة الخيارات عند الضغط خارجها
+    // إغلاق أي قائمة عند الضغط خارجها
     document.addEventListener('click', () => {
-      document.querySelectorAll('.options-menu').forEach(m => m.style.display = 'none');
+      document.querySelectorAll('.options-menu').forEach(m => m.style.display='none');
     });
 
-    // إضافة عنصر جديد
+    // زر إضافة طالب جديد
     addBtn.addEventListener('click', () => {
-      const text = prompt('أدخل نص العنصر الجديد:');
-      if(text) {
-        const id = items.length ? items[items.length - 1].id + 1 : 1;
-        items.push({ id, text });
+      const name = prompt('أدخل الاسم:');
+      const grade = prompt('أدخل الصف:');
+      const section = prompt('أدخل الشعبة:');
+      if(name && grade && section){
+        const id = items.length ? items[items.length -1].id +1 : 1;
+        items.push({ id, name, grade, section });
         renderList();
       }
     });
 
-    // عرض القائمة لأول مرة
-    renderList();
+    renderList(); // عرض القائمة لأول مرة
   </script>
 
 </body>
