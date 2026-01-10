@@ -2,98 +2,176 @@
 <html lang="ar">
 <head>
   <meta charset="UTF-8">
-  <title>قائمة طلاب ديناميكية</title>
+  <title>قائمة الطلاب المتقدمة</title>
   <style>
+    /* ===== Body ===== */
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #f7f8fa;
-      padding: 30px;
+      background-color: #f5f7fa;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      align-items: center;
     }
 
     h1 {
       text-align: center;
-      margin-bottom: 20px;
+      margin: 30px 0 20px 0;
+      color: #333;
     }
 
+    /* ===== Add Button ===== */
     #addBtn {
-      display: block;
-      margin: 0 auto 30px auto;
-      padding: 10px 25px;
+      padding: 12px 25px;
       background-color: #4CAF50;
       color: white;
       border: none;
       border-radius: 8px;
       font-size: 16px;
       cursor: pointer;
-      transition: background 0.3s;
+      transition: 0.3s;
+      margin-bottom: 25px;
     }
     #addBtn:hover {
       background-color: #45a049;
     }
 
+    /* ===== List Container ===== */
     #listContainer {
+      width: 90%;
       max-width: 700px;
-      margin: auto;
     }
 
     .list-item {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 12px 15px;
-      margin: 10px 0;
+      padding: 15px 20px;
+      margin-bottom: 15px;
       background-color: #ffffff;
-      border-radius: 10px;
-      box-shadow: 0px 3px 6px rgba(0,0,0,0.1);
+      border-radius: 12px;
+      box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
       transition: transform 0.2s;
       position: relative;
     }
+
     .list-item:hover {
       transform: translateY(-2px);
     }
 
     .item-info {
       display: flex;
-      gap: 20px;
+      flex-direction: column;
+      gap: 5px;
     }
 
     .item-info div {
-      min-width: 100px;
+      font-size: 16px;
+      color: #333;
     }
 
+    /* ===== Options Button ===== */
     .options-btn {
       cursor: pointer;
-      padding: 5px 10px;
+      padding: 6px 12px;
       border: none;
-      background-color: #e0e0e0;
-      border-radius: 5px;
+      background-color: #eee;
+      border-radius: 6px;
       font-weight: bold;
     }
 
     .options-menu {
       display: none;
       position: absolute;
-      top: 40px;
-      right: 15px;
+      top: 45px;
+      right: 20px;
       background-color: white;
-      border: 1px solid #ddd;
-      box-shadow: 0px 2px 6px rgba(0,0,0,0.2);
+      border-radius: 8px;
+      box-shadow: 0px 4px 10px rgba(0,0,0,0.15);
       z-index: 100;
-      border-radius: 6px;
+      min-width: 120px;
+      overflow: hidden;
     }
 
     .options-menu button {
       display: block;
       width: 100%;
-      padding: 8px 15px;
+      padding: 10px 15px;
       border: none;
       background: none;
       cursor: pointer;
       text-align: right;
+      font-size: 14px;
     }
 
     .options-menu button:hover {
       background-color: #f0f0f0;
+    }
+
+    /* ===== Modal ===== */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background-color: rgba(0,0,0,0.5);
+      justify-content: center;
+      align-items: center;
+      z-index: 200;
+    }
+
+    .modal-content {
+      background-color: #fff;
+      border-radius: 12px;
+      padding: 25px 30px;
+      width: 90%;
+      max-width: 400px;
+      box-shadow: 0px 4px 15px rgba(0,0,0,0.2);
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .modal-content h2 {
+      margin: 0 0 10px 0;
+      color: #333;
+      text-align: center;
+    }
+
+    .modal-content input, .modal-content select {
+      padding: 10px 12px;
+      font-size: 15px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      width: 100%;
+    }
+
+    .modal-content button {
+      padding: 10px 0;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: 0.3s;
+    }
+
+    .modal-content button:hover {
+      background-color: #45a049;
+    }
+
+    /* Responsive */
+    @media (max-width: 500px) {
+      .item-info div {
+        font-size: 14px;
+      }
+      .options-btn {
+        padding: 4px 8px;
+      }
     }
 
   </style>
@@ -105,15 +183,41 @@
 
   <div id="listContainer"></div>
 
+  <!-- Modal إضافة الطالب -->
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <h2>إضافة طالب جديد</h2>
+      <input type="text" id="studentName" placeholder="الاسم">
+      <select id="studentGrade">
+        <option value="">اختر الصف</option>
+        <option value="الرابع علمي">الرابع علمي</option>
+        <option value="الخامس علمي">الخامس علمي</option>
+        <option value="السادس علمي">السادس علمي</option>
+      </select>
+      <select id="studentSection">
+        <option value="">اختر الشعبة</option>
+        <option value="ألف">ألف</option>
+        <option value="باء">باء</option>
+        <option value="جيم">جيم</option>
+      </select>
+      <button id="saveStudent">حفظ الطالب</button>
+    </div>
+  </div>
+
   <script>
     const listContainer = document.getElementById('listContainer');
     const addBtn = document.getElementById('addBtn');
+    const modal = document.getElementById('modal');
+    const saveStudent = document.getElementById('saveStudent');
 
-    let items = []; // لا يوجد عناصر مسبقًا
+    const studentName = document.getElementById('studentName');
+    const studentGrade = document.getElementById('studentGrade');
+    const studentSection = document.getElementById('studentSection');
+
+    let items = [];
 
     function renderList() {
       listContainer.innerHTML = '';
-
       items.forEach(item => {
         const listItem = document.createElement('div');
         listItem.className = 'list-item';
@@ -139,15 +243,23 @@
         const editBtn = document.createElement('button');
         editBtn.textContent = 'تعديل';
         editBtn.addEventListener('click', () => {
-          const newName = prompt('الاسم:', item.name);
-          const newGrade = prompt('الصف:', item.grade);
-          const newSection = prompt('الشعبة:', item.section);
-          if(newName && newGrade && newSection){
-            item.name = newName;
-            item.grade = newGrade;
-            item.section = newSection;
-            renderList();
-          }
+          studentName.value = item.name;
+          studentGrade.value = item.grade;
+          studentSection.value = item.section;
+          modal.style.display = 'flex';
+
+          saveStudent.onclick = () => {
+            if(studentName.value && studentGrade.value && studentSection.value){
+              item.name = studentName.value;
+              item.grade = studentGrade.value;
+              item.section = studentSection.value;
+              modal.style.display = 'none';
+              renderList();
+              studentName.value = '';
+              studentGrade.value = '';
+              studentSection.value = '';
+            }
+          };
         });
 
         const deleteBtn = document.createElement('button');
@@ -173,24 +285,37 @@
       });
     }
 
-    // إغلاق أي قائمة عند الضغط خارجها
+    // إغلاق أي قائمة خيارات عند الضغط خارجها
     document.addEventListener('click', () => {
       document.querySelectorAll('.options-menu').forEach(m => m.style.display='none');
     });
 
-    // زر إضافة طالب جديد
+    // فتح المودال عند الضغط على إضافة طالب
     addBtn.addEventListener('click', () => {
-      const name = prompt('أدخل الاسم:');
-      const grade = prompt('أدخل الصف:');
-      const section = prompt('أدخل الشعبة:');
-      if(name && grade && section){
+      modal.style.display = 'flex';
+    });
+
+    // حفظ الطالب الجديد من المودال
+    saveStudent.addEventListener('click', () => {
+      if(studentName.value && studentGrade.value && studentSection.value){
         const id = items.length ? items[items.length -1].id +1 : 1;
-        items.push({ id, name, grade, section });
+        items.push({ id, name: studentName.value, grade: studentGrade.value, section: studentSection.value });
+        modal.style.display = 'none';
+        studentName.value = '';
+        studentGrade.value = '';
+        studentSection.value = '';
         renderList();
       }
     });
 
-    renderList(); // عرض القائمة لأول مرة
+    // إغلاق المودال عند الضغط خارجه
+    modal.addEventListener('click', (e) => {
+      if(e.target === modal){
+        modal.style.display = 'none';
+      }
+    });
+
+    renderList();
   </script>
 
 </body>
