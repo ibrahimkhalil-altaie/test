@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>إعدادية جلولاء | Ultra Premium Login</title>
+    <title>تنبيهات الإدارة | إعدادية جلولاء</title>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            --primary: #FFB300;
-            --primary-glow: rgba(255, 179, 0, 0.4);
+            --bg: #000000;
+            --fg: #FFFFFF;
+            --amber: #FFB300;
             --glass: rgba(255, 255, 255, 0.03);
-            --glass-border: rgba(255, 255, 255, 0.12);
-            --ios-blur: blur(40px) saturate(200%) brightness(80%);
+            --glass-border: rgba(255, 255, 255, 0.1);
             --font: 'IBM Plex Sans Arabic', sans-serif;
         }
 
@@ -20,294 +20,218 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            user-select: none;
+            -webkit-font-smoothing: antialiased;
         }
 
         body {
-            background: #000;
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            background-color: var(--bg);
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(255, 179, 0, 0.05) 0, transparent 40%),
+                radial-gradient(at 100% 100%, rgba(0, 112, 243, 0.05) 0, transparent 40%);
+            color: var(--fg);
             font-family: var(--font);
-            color: white;
-            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 40px 20px;
         }
 
-        /* خلفية Mesh Gradient متحركة */
-        .mesh-bg {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            z-index: -1;
-            background: 
-                radial-gradient(at 0% 0%, hsla(42,100%,50%,0.15) 0, transparent 50%), 
-                radial-gradient(at 100% 100%, hsla(240,100%,50%,0.1) 0, transparent 50%),
-                radial-gradient(at 50% 0%, hsla(0,100%,50%,0.05) 0, transparent 50%);
-            filter: blur(100px);
-            animation: gradientMove 20s infinite alternate;
-        }
-
-        @keyframes gradientMove {
-            0% { transform: scale(1); }
-            100% { transform: scale(1.2) rotate(5deg); }
-        }
-
-        /* البطاقة الزجاجية الرئيسية */
-        .glass-card {
+        /* --- Header Section --- */
+        .page-header {
             width: 100%;
-            max-width: 440px;
-            padding: 50px 40px;
-            background: var(--glass);
-            backdrop-filter: var(--ios-blur);
-            -webkit-backdrop-filter: var(--ios-blur);
-            border: 1px solid var(--glass-border);
-            border-radius: 40px;
-            box-shadow: 0 40px 100px rgba(0,0,0,0.8);
-            position: relative;
-            z-index: 10;
+            max-width: 600px;
+            margin-bottom: 50px;
+            text-align: right;
+            border-right: 3px solid var(--amber);
+            padding-right: 20px;
         }
 
-        .glass-card::before {
-            content: "";
-            position: absolute;
-            inset: 0;
-            border-radius: 40px;
-            padding: 1px;
-            background: linear-gradient(135deg, rgba(255,255,255,0.2), transparent, var(--primary-glow));
-            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            mask-composite: exclude;
-            pointer-events: none;
-        }
-
-        header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-
-        header h1 {
+        .page-header h1 {
             font-size: 28px;
             font-weight: 700;
-            background: linear-gradient(180deg, #FFFFFF 0%, rgba(255, 255, 255, 0.6) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 10px;
+            letter-spacing: -1px;
         }
 
-        header p {
-            color: rgba(255, 255, 255, 0.4);
+        .page-header p {
+            color: #888;
             font-size: 14px;
-            font-weight: 300;
-            letter-spacing: 0.5px;
+            margin-top: 5px;
         }
 
-        /* حقول الإدخال */
-        .input-box {
-            position: relative;
-            margin-bottom: 25px;
-        }
-
-        label {
-            font-size: 11px;
-            color: var(--primary);
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            margin-bottom: 8px;
-            display: block;
-            font-weight: 600;
-            opacity: 0.8;
-        }
-
-        input, .select-box {
+        /* --- Feed Container --- */
+        .feed-container {
             width: 100%;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid transparent;
-            border-bottom: 1.5px solid rgba(255, 255, 255, 0.1);
-            border-radius: 16px;
-            padding: 14px 20px;
-            color: white;
-            font-family: var(--font);
-            font-size: 15px;
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        input:focus {
-            background: rgba(255, 255, 255, 0.1);
-            border-bottom-color: var(--primary);
-            box-shadow: 0 10px 30px -10px var(--primary-glow);
-        }
-
-        .row {
+            max-width: 600px;
             display: flex;
-            gap: 15px;
-            margin-bottom: 25px;
+            flex-direction: column;
+            gap: 25px;
         }
 
-        .select-box {
+        /* --- Post Card (Apple Glass Style) --- */
+        .post-card {
+            background: var(--glass);
+            backdrop-filter: blur(25px) saturate(160%);
+            -webkit-backdrop-filter: blur(25px) saturate(160%);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 24px;
+            position: relative;
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+
+        .post-card:hover {
+            border-color: rgba(255, 179, 0, 0.3);
+            transform: translateY(-2px);
+        }
+
+        /* Post Header (Author Info) */
+        .post-meta {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            cursor: pointer;
+            margin-bottom: 15px;
         }
 
-        .select-box:hover {
-            background: rgba(255, 255, 255, 0.1);
+        .author-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
-        .select-box span {
-            color: rgba(255, 255, 255, 0.6);
+        .author-avatar {
+            width: 32px;
+            height: 32px;
+            background: var(--amber);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #000;
+            font-weight: 700;
+            font-size: 12px;
+        }
+
+        .author-name {
+            font-weight: 600;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .verified-icon {
+            color: var(--amber);
             font-size: 14px;
         }
 
-        /* زر الدخول Apple Style */
-        .btn-submit {
-            width: 100%;
-            height: 56px;
-            background: var(--primary);
-            color: #000;
-            border: none;
-            border-radius: 18px;
-            font-size: 17px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-            margin-top: 10px;
+        .post-time {
+            font-size: 11px;
+            color: #666;
+            font-weight: 500;
+            background: rgba(255,255,255,0.05);
+            padding: 4px 10px;
+            border-radius: 20px;
         }
 
-        .btn-submit:hover {
-            transform: scale(1.02);
-            box-shadow: 0 20px 40px -10px var(--primary-glow);
+        /* Post Content */
+        .post-content {
+            font-size: 15px;
+            line-height: 1.8;
+            color: rgba(255, 255, 255, 0.85);
+            margin-bottom: 10px;
         }
 
-        .btn-submit:active {
-            transform: scale(0.98);
+        .post-footer {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            gap: 10px;
         }
 
-        /* القائمة المنبثقة (iOS Dialog) */
-        .ios-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.6);
-            backdrop-filter: blur(15px);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 100;
-            padding: 20px;
+        .tag {
+            font-size: 11px;
+            background: rgba(255, 179, 0, 0.1);
+            color: var(--amber);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: 600;
         }
 
-        .ios-overlay.active { display: flex; }
-
-        .ios-dialog {
-            width: 100%;
-            max-width: 320px;
-            background: rgba(30, 30, 30, 0.85);
-            backdrop-filter: blur(30px);
-            border-radius: 25px;
-            border: 1px solid rgba(255,255,255,0.1);
-            overflow: hidden;
-            animation: iosPop 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        /* Specific Badge for Representative */
+        .rep-badge {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
         }
-
-        @keyframes iosPop {
-            from { transform: scale(1.2); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
-
-        .dialog-btn {
-            padding: 18px;
-            text-align: center;
-            color: #45a2ff;
-            font-size: 17px;
-            border-bottom: 0.5px solid rgba(255,255,255,0.1);
-            cursor: pointer;
-        }
-
-        .dialog-btn:last-child { border-bottom: none; color: #ff3b30; font-weight: 600; }
-
-        .dialog-btn:active { background: rgba(255,255,255,0.1); }
     </style>
 </head>
 <body>
 
-    <div class="mesh-bg"></div>
+    <header class="page-header">
+        <h1>التنبيهات الإدارية</h1>
+        <p>اخر المستجدات والتوجيهات الرسمية</p>
+    </header>
 
-    <div class="glass-card">
-        <header>
-            <h1>إعدادية جلولاء للبنين</h1>
-            <p>Portal Access • 2026 Edition</p>
-        </header>
-
-        <div class="input-box">
-            <label>Serial ID • الرقم التسلسلي</label>
-            <input type="text" placeholder="ID-000000" id="id">
-        </div>
-
-        <div class="row">
-            <div style="flex: 2;">
-                <label>Grade • الصف</label>
-                <div class="select-box" onclick="showIOSModal('grade')">
-                    <span id="gradeVal">اختر الصف</span>
-                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 4L6 8L10 4" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <div class="feed-container">
+        
+        <div class="post-card">
+            <div class="post-meta">
+                <div class="author-box">
+                    <div class="author-avatar" style="background: #fff;">إ</div>
+                    <div class="author-name">
+                        الإدارة 
+                        <span class="verified-icon">●</span>
+                    </div>
                 </div>
+                <div class="post-time">اليوم • 3:29ص</div>
             </div>
-            <div style="flex: 1;">
-                <label>Section • الشعبة</label>
-                <div class="select-box" onclick="showIOSModal('section')">
-                    <span id="secVal">...</span>
-                </div>
+            <div class="post-content">
+                نود إعلام جميع الطلبة بضرورة الالتزام بالزي الموحد والتواجد في باحة المدرسة قبل الساعة الثامنة صباحاً لأداء مراسيم رفعة العلم.
+            </div>
+            <div class="post-footer">
+                <span class="tag">توجيه رسمي</span>
             </div>
         </div>
 
-        <div class="input-box">
-            <label>Passcode • كلمة المرور</label>
-            <input type="password" placeholder="••••••••" id="pass">
+        <div class="post-card">
+            <div class="post-meta">
+                <div class="author-box">
+                    <div class="author-avatar">ع</div>
+                    <div class="author-name">أ. عثمان</div>
+                </div>
+                <div class="post-time">منذ ساعتين</div>
+            </div>
+            <div class="post-content">
+                طلاب الصف السادس علمي، سيتم إجراء امتحان تجريبي لمادة الفيزياء يوم الخميس القادم. يرجى التركيز على الفصل الثالث والرابع.
+            </div>
+            <div class="post-footer">
+                <span class="tag">تبليغ مادة</span>
+                <span class="tag">هام</span>
+            </div>
         </div>
 
-        <button class="btn-submit" onclick="submitLogin()">دخول آمن</button>
-    </div>
-
-    <div class="ios-overlay" id="iosOverlay">
-        <div class="ios-dialog">
-            <div id="iosOptions"></div>
-            <div class="dialog-btn" onclick="hideIOSModal()">إلغاء</div>
+        <div class="post-card">
+            <div class="post-meta">
+                <div class="author-box">
+                    <div class="author-avatar" style="background: var(--fg); color: #000;">م</div>
+                    <div class="author-name">الممثل ( إبراهيم خليل إبراهيم )</div>
+                </div>
+                <div class="post-time">منذ 5 ساعات</div>
+            </div>
+            <div class="post-content">
+                إخوتي الطلاب، تم استلام ملازم مادة الكيمياء من المكتبة، يمكنكم مراجعة الشعبة لاستلام نسخكم. بالتوفيق للجميع.
+            </div>
+            <div class="post-footer">
+                <span class="tag rep-badge">شؤون الطلاب</span>
+            </div>
         </div>
+
     </div>
 
-    <script>
-        const store = {
-            grade: ["الرابع علمي", "الخامس علمي", "السادس علمي"],
-            section: ["أ", "ب", "ج", "د"]
-        };
+    <footer style="margin-top: 50px; color: #444; font-size: 12px;">
+        نهاية التنبيهات • إعدادية جلولاء
+    </footer>
 
-        function showIOSModal(type) {
-            const container = document.getElementById('iosOptions');
-            container.innerHTML = '';
-            store[type].forEach(item => {
-                const div = document.createElement('div');
-                div.className = 'dialog-btn';
-                div.innerText = item;
-                div.onclick = () => {
-                    document.getElementById(type === 'grade' ? 'gradeVal' : 'secVal').innerText = item;
-                    document.getElementById(type === 'grade' ? 'gradeVal' : 'secVal').style.color = "#fff";
-                    hideIOSModal();
-                };
-                container.appendChild(div);
-            });
-            document.getElementById('iosOverlay').classList.add('active');
-        }
-
-        function hideIOSModal() {
-            document.getElementById('iosOverlay').classList.remove('active');
-        }
-
-        function submitLogin() {
-            const btn = document.querySelector('.btn-submit');
-            btn.innerHTML = 'جاري المصادقة...';
-            // إضافة اهتزاز بسيط (UX)
-            setTimeout(() => {
-                window.location.reload(); // مثال لإعادة التحميل
-            }, 1000);
-        }
-    </script>
 </body>
 </html>
