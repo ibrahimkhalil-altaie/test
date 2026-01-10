@@ -3,18 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تسجيل الدخول | إعدادية جلولاء</title>
+    <title>إعدادية جلولاء | Ultra Premium Login</title>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            --bg-image: url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop'); /* خلفية تقنية خافتة */
-            --glass-bg: rgba(10, 10, 10, 0.7);
-            --fg: #ffffff;
-            --amber: #FFB300;
-            --gray-200: rgba(255, 255, 255, 0.1);
-            --gray-500: #888888;
-            --radius: 12px;
+            --primary: #FFB300;
+            --primary-glow: rgba(255, 179, 0, 0.4);
+            --glass: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.12);
+            --ios-blur: blur(40px) saturate(200%) brightness(80%);
             --font: 'IBM Plex Sans Arabic', sans-serif;
         }
 
@@ -22,295 +20,294 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            outline: none;
+            user-select: none;
         }
 
         body {
-            background-color: #000;
-            /* إضافة خلفية متدرجة خفيفة لتعزيز تأثير الزجاج */
-            background-image: radial-gradient(circle at 50% 50%, #1a1a1a 0%, #000 100%);
-            color: var(--fg);
-            font-family: var(--font);
+            background: #000;
+            height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            height: 100vh;
-            padding: 20px;
+            font-family: var(--font);
+            color: white;
             overflow: hidden;
         }
 
-        /* --- Glass Card --- */
-        .login-card {
+        /* خلفية Mesh Gradient متحركة */
+        .mesh-bg {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;
+            background: 
+                radial-gradient(at 0% 0%, hsla(42,100%,50%,0.15) 0, transparent 50%), 
+                radial-gradient(at 100% 100%, hsla(240,100%,50%,0.1) 0, transparent 50%),
+                radial-gradient(at 50% 0%, hsla(0,100%,50%,0.05) 0, transparent 50%);
+            filter: blur(100px);
+            animation: gradientMove 20s infinite alternate;
+        }
+
+        @keyframes gradientMove {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.2) rotate(5deg); }
+        }
+
+        /* البطاقة الزجاجية الرئيسية */
+        .glass-card {
             width: 100%;
-            max-width: 420px;
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px) saturate(180%);
-            -webkit-backdrop-filter: blur(20px) saturate(180%);
-            border: 1px solid var(--gray-200);
-            border-radius: 24px;
-            padding: 40px 30px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            display: flex;
-            flex-direction: column;
-            gap: 25px;
+            max-width: 440px;
+            padding: 50px 40px;
+            background: var(--glass);
+            backdrop-filter: var(--ios-blur);
+            -webkit-backdrop-filter: var(--ios-blur);
+            border: 1px solid var(--glass-border);
+            border-radius: 40px;
+            box-shadow: 0 40px 100px rgba(0,0,0,0.8);
+            position: relative;
+            z-index: 10;
+        }
+
+        .glass-card::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: 40px;
+            padding: 1px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.2), transparent, var(--primary-glow));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask-composite: exclude;
+            pointer-events: none;
         }
 
         header {
             text-align: center;
+            margin-bottom: 40px;
         }
 
         header h1 {
-            font-size: 24px;
+            font-size: 28px;
             font-weight: 700;
-            letter-spacing: -0.5px;
-            margin-bottom: 8px;
-            background: linear-gradient(to bottom, #fff, #888);
+            background: linear-gradient(180deg, #FFFFFF 0%, rgba(255, 255, 255, 0.6) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
         }
 
         header p {
-            color: var(--gray-500);
-            font-size: 13px;
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 14px;
+            font-weight: 300;
+            letter-spacing: 0.5px;
         }
 
-        /* --- Form --- */
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-
-        .field {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .row {
-            display: flex;
-            gap: 12px;
+        /* حقول الإدخال */
+        .input-box {
+            position: relative;
+            margin-bottom: 25px;
         }
 
         label {
             font-size: 11px;
-            font-weight: 600;
-            color: var(--amber);
+            color: var(--primary);
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-            padding-right: 4px;
+            letter-spacing: 1.5px;
+            margin-bottom: 8px;
+            display: block;
+            font-weight: 600;
+            opacity: 0.8;
         }
 
-        input, .custom-select {
+        input, .select-box {
             width: 100%;
-            height: 50px;
             background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--gray-200);
-            border-radius: var(--radius);
-            color: var(--fg);
-            padding: 0 16px;
-            font-size: 14px;
+            border: 1px solid transparent;
+            border-bottom: 1.5px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 14px 20px;
+            color: white;
             font-family: var(--font);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            display: flex;
-            align-items: center;
-            cursor: pointer;
+            font-size: 15px;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         input:focus {
-            border-color: var(--amber);
-            background: rgba(255, 255, 255, 0.08);
-            box-shadow: 0 0 0 1px var(--amber);
+            background: rgba(255, 255, 255, 0.1);
+            border-bottom-color: var(--primary);
+            box-shadow: 0 10px 30px -10px var(--primary-glow);
         }
 
-        .custom-select {
+        .row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .select-box {
+            display: flex;
             justify-content: space-between;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            align-items: center;
+            cursor: pointer;
         }
 
-        .custom-select span {
-            font-size: 13px;
-            color: var(--gray-500);
+        .select-box:hover {
+            background: rgba(255, 255, 255, 0.1);
         }
 
-        .custom-select.selected span {
-            color: var(--fg);
+        .select-box span {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 14px;
         }
 
-        /* Login Button */
-        .btn-login {
-            background: var(--amber);
+        /* زر الدخول Apple Style */
+        .btn-submit {
+            width: 100%;
+            height: 56px;
+            background: var(--primary);
             color: #000;
             border: none;
-            height: 52px;
-            border-radius: var(--radius);
+            border-radius: 18px;
+            font-size: 17px;
             font-weight: 700;
-            font-size: 16px;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
             margin-top: 10px;
-            box-shadow: 0 4px 15px rgba(255, 179, 0, 0.3);
         }
 
-        .btn-login:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(255, 179, 0, 0.4);
+        .btn-submit:hover {
+            transform: scale(1.02);
+            box-shadow: 0 20px 40px -10px var(--primary-glow);
         }
 
-        /* --- Custom iPhone Dialog --- */
-        .dialog-overlay {
+        .btn-submit:active {
+            transform: scale(0.98);
+        }
+
+        /* القائمة المنبثقة (iOS Dialog) */
+        .ios-overlay {
             position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.4);
-            backdrop-filter: blur(10px);
+            inset: 0;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(15px);
             display: none;
             align-items: center;
             justify-content: center;
-            z-index: 1000;
+            z-index: 100;
             padding: 20px;
         }
 
-        .dialog-overlay.active { display: flex; }
+        .ios-overlay.active { display: flex; }
 
-        .dialog {
-            background: rgba(28, 28, 30, 0.95);
-            border: 1px solid rgba(255,255,255,0.1);
+        .ios-dialog {
             width: 100%;
-            max-width: 300px;
-            border-radius: 20px;
+            max-width: 320px;
+            background: rgba(30, 30, 30, 0.85);
+            backdrop-filter: blur(30px);
+            border-radius: 25px;
+            border: 1px solid rgba(255,255,255,0.1);
             overflow: hidden;
-            animation: appleModal 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: iosPop 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        @keyframes appleModal {
-            from { transform: scale(1.1); opacity: 0; }
+        @keyframes iosPop {
+            from { transform: scale(1.2); opacity: 0; }
             to { transform: scale(1); opacity: 1; }
         }
 
-        .dialog-header {
-            padding: 20px 16px 10px;
+        .dialog-btn {
+            padding: 18px;
             text-align: center;
-            font-weight: 600;
-            font-size: 16px;
-        }
-
-        .option-item {
-            padding: 14px;
-            text-align: center;
-            color: var(--amber);
-            font-size: 16px;
-            border-top: 1px solid rgba(255,255,255,0.1);
+            color: #45a2ff;
+            font-size: 17px;
+            border-bottom: 0.5px solid rgba(255,255,255,0.1);
             cursor: pointer;
-            transition: background 0.2s;
         }
 
-        .option-item:active {
-            background: rgba(255,255,255,0.1);
-        }
+        .dialog-btn:last-child { border-bottom: none; color: #ff3b30; font-weight: 600; }
 
-        .footer-text {
-            text-align: center;
-            font-size: 11px;
-            color: var(--gray-500);
-            opacity: 0.6;
-        }
+        .dialog-btn:active { background: rgba(255,255,255,0.1); }
     </style>
 </head>
 <body>
 
-    <div class="login-card">
+    <div class="mesh-bg"></div>
+
+    <div class="glass-card">
         <header>
             <h1>إعدادية جلولاء للبنين</h1>
-            <p>نظام إدارة شؤون الطلاب الذكي</p>
+            <p>Portal Access • 2026 Edition</p>
         </header>
 
-        <div class="form-group">
-            <div class="field">
-                <label>الرقم التسلسلي</label>
-                <input type="text" placeholder="أدخل رقمك التسلسلي" id="serialNum">
-            </div>
-
-            <div class="row">
-                <div class="field" style="flex: 2;">
-                    <label>الصف</label>
-                    <div class="custom-select" onclick="openModal('grade')">
-                        <span id="gradeVal">اختر الصف</span>
-                        <svg width="12" height="12" viewBox="0 0 15 15" fill="none" style="color:var(--amber)"><path d="M4.93 5.43L7.5 8.63L10.06 5.43" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-                    </div>
-                </div>
-                <div class="field" style="flex: 1;">
-                    <label>الشعبة</label>
-                    <div class="custom-select" onclick="openModal('section')">
-                        <span id="secVal">الشعبة</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="field">
-                <label>كلمة المرور</label>
-                <input type="password" placeholder="••••••••" id="password">
-            </div>
-
-            <button class="btn-login" onclick="login()">دخول النظام</button>
+        <div class="input-box">
+            <label>Serial ID • الرقم التسلسلي</label>
+            <input type="text" placeholder="ID-000000" id="id">
         </div>
 
-        <p class="footer-text">حقوق الطبع محفوظة © 2026</p>
+        <div class="row">
+            <div style="flex: 2;">
+                <label>Grade • الصف</label>
+                <div class="select-box" onclick="showIOSModal('grade')">
+                    <span id="gradeVal">اختر الصف</span>
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 4L6 8L10 4" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
+            </div>
+            <div style="flex: 1;">
+                <label>Section • الشعبة</label>
+                <div class="select-box" onclick="showIOSModal('section')">
+                    <span id="secVal">...</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="input-box">
+            <label>Passcode • كلمة المرور</label>
+            <input type="password" placeholder="••••••••" id="pass">
+        </div>
+
+        <button class="btn-submit" onclick="submitLogin()">دخول آمن</button>
     </div>
 
-    <div class="dialog-overlay" id="overlay">
-        <div class="dialog">
-            <div class="dialog-header" id="modalTitle">العنوان</div>
-            <div id="options"></div>
-            <div class="option-item" style="color: #ff453a; font-weight: 600;" onclick="closeModal()">إلغاء</div>
+    <div class="ios-overlay" id="iosOverlay">
+        <div class="ios-dialog">
+            <div id="iosOptions"></div>
+            <div class="dialog-btn" onclick="hideIOSModal()">إلغاء</div>
         </div>
     </div>
 
     <script>
-        const data = {
+        const store = {
             grade: ["الرابع علمي", "الخامس علمي", "السادس علمي"],
             section: ["أ", "ب", "ج", "د"]
         };
 
-        const overlay = document.getElementById('overlay');
-        const optionsDiv = document.getElementById('options');
-        const modalTitle = document.getElementById('modalTitle');
-
-        function openModal(type) {
-            modalTitle.innerText = type === 'grade' ? "اختر الصف الدراسي" : "اختر الشعبة";
-            optionsDiv.innerHTML = '';
-            
-            data[type].forEach(item => {
+        function showIOSModal(type) {
+            const container = document.getElementById('iosOptions');
+            container.innerHTML = '';
+            store[type].forEach(item => {
                 const div = document.createElement('div');
-                div.className = 'option-item';
-                div.innerText = type === 'section' ? `شعبة ${item}` : item;
+                div.className = 'dialog-btn';
+                div.innerText = item;
                 div.onclick = () => {
                     document.getElementById(type === 'grade' ? 'gradeVal' : 'secVal').innerText = item;
-                    document.getElementById(type === 'grade' ? 'gradeVal' : 'secVal').parentElement.classList.add('selected');
-                    closeModal();
+                    document.getElementById(type === 'grade' ? 'gradeVal' : 'secVal').style.color = "#fff";
+                    hideIOSModal();
                 };
-                optionsDiv.appendChild(div);
+                container.appendChild(div);
             });
-            overlay.classList.add('active');
+            document.getElementById('iosOverlay').classList.add('active');
         }
 
-        function closeModal() {
-            overlay.classList.remove('active');
+        function hideIOSModal() {
+            document.getElementById('iosOverlay').classList.remove('active');
         }
 
-        function login() {
-            const btn = document.querySelector('.btn-login');
-            btn.innerText = "جاري التحقق...";
-            btn.style.opacity = "0.7";
+        function submitLogin() {
+            const btn = document.querySelector('.btn-submit');
+            btn.innerHTML = 'جاري المصادقة...';
+            // إضافة اهتزاز بسيط (UX)
             setTimeout(() => {
-                alert("تم تسجيل الدخول بنجاح");
-                btn.innerText = "دخول النظام";
-                btn.style.opacity = "1";
-            }, 1500);
+                window.location.reload(); // مثال لإعادة التحميل
+            }, 1000);
         }
-
-        overlay.addEventListener('click', (e) => { if(e.target === overlay) closeModal(); });
     </script>
 </body>
 </html>
