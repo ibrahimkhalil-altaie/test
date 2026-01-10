@@ -2,54 +2,165 @@
 <html lang="ar">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>تسجيل الدخول</title>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/supabase.min.js"></script>
+  <title>Dynamic ListView</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    #addBtn {
+      padding: 10px 20px;
+      margin-bottom: 20px;
+      cursor: pointer;
+    }
+
+    #listContainer {
+      max-width: 500px;
+      margin: auto;
+    }
+
+    .list-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px;
+      margin: 5px 0;
+      background-color: #f0f0f0;
+      border-radius: 5px;
+    }
+
+    .list-item:hover {
+      background-color: #e0e0e0;
+    }
+
+    .options-btn {
+      cursor: pointer;
+      padding: 5px 10px;
+      border: none;
+      background-color: #ccc;
+      border-radius: 3px;
+    }
+
+    .options-menu {
+      display: none;
+      position: absolute;
+      background-color: white;
+      border: 1px solid #ddd;
+      box-shadow: 0px 2px 5px rgba(0,0,0,0.2);
+      z-index: 100;
+    }
+
+    .options-menu button {
+      display: block;
+      width: 100%;
+      padding: 5px 10px;
+      border: none;
+      background: none;
+      cursor: pointer;
+    }
+
+    .options-menu button:hover {
+      background-color: #f0f0f0;
+    }
+
+    .list-item-container {
+      position: relative;
+    }
+
+  </style>
 </head>
 <body>
 
-  <div class="login-container">
-    <h2>تسجيل الدخول</h2>
-    <form id="loginForm">
-      <input type="text" id="email" placeholder="البريد الإلكتروني" required><br><br>
-      <input type="password" id="password" placeholder="كلمة المرور" required><br><br>
-      <button type="submit">دخول</button>
-    </form>
-  </div>
+  <h1>قائمة ديناميكية</h1>
+  <button id="addBtn">إضافة عنصر جديد</button>
+  
+  <div id="listContainer"></div>
 
   <script>
-    // إعداد Supabase
-    const supabaseUrl = 'https://YOUR_PROJECT_ID.supabase.co'; // ضع رابط المشروع الخاص بك
-    const supabaseKey = 'YOUR_ANON_KEY'; // ضع الـanon key الخاص بالمشروع
-    const supabase = Supabase.createClient(supabaseUrl, supabaseKey);
+    const listContainer = document.getElementById('listContainer');
+    const addBtn = document.getElementById('addBtn');
 
-    // الحدث عند الضغط على الزر
-    const loginForm = document.getElementById('loginForm');
-    loginForm.addEventListener('submit', async (e) => {
-      e.preventDefault(); // منع إعادة تحميل الصفحة
+    // البيانات الأولية
+    let items = [
+      { id: 1, text: "العنصر الأول" },
+      { id: 2, text: "العنصر الثاني" },
+      { id: 3, text: "العنصر الثالث" }
+    ];
 
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
+    // دالة عرض العناصر
+    function renderList() {
+      listContainer.innerHTML = '';
+      items.forEach(item => {
+        const container = document.createElement('div');
+        container.className = 'list-item-container';
 
-      try {
-        const { data, error } = await supabase.auth.signInWithPassword({
-          email: email,
-          password: password
+        const div = document.createElement('div');
+        div.className = 'list-item';
+        div.textContent = item.text;
+
+        // زر الخيارات الثلاث نقاط
+        const optionsBtn = document.createElement('button');
+        optionsBtn.className = 'options-btn';
+        optionsBtn.textContent = '⋮';
+
+        // قائمة الخيارات
+        const menu = document.createElement('div');
+        menu.className = 'options-menu';
+        const deleteBtn = document.createElement('button');
+        deleteBtn.textContent = 'حذف';
+        deleteBtn.addEventListener('click', () => {
+          items = items.filter(i => i.id !== item.id);
+          renderList();
         });
 
-        if (error) {
-          console.error('حدث خطأ:', error.message);
-          alert('خطأ في تسجيل الدخول: ' + error.message);
-        } else {
-          console.log('تم تسجيل الدخول بنجاح:', data);
-          alert('تم تسجيل الدخول بنجاح!');
-          // يمكنك توجيه المستخدم لصفحة أخرى هنا
-          // window.location.href = "/dashboard.html";
-        }
-      } catch (err) {
-        console.error('خطأ غير متوقع:', err);
+        const editBtn = document.createElement('button');
+        editBtn.textContent = 'تعديل';
+        editBtn.addEventListener('click', () => {
+          const newText = prompt('أدخل النص الجديد:', item.text);
+          if(newText) {
+            item.text = newText;
+            renderList();
+          }
+        });
+
+        menu.appendChild(editBtn);
+        menu.appendChild(deleteBtn);
+
+        optionsBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          document.querySelectorAll('.options-menu').forEach(m => m.style.display = 'none');
+          menu.style.display = 'block';
+        });
+
+        container.appendChild(div);
+        container.appendChild(optionsBtn);
+        container.appendChild(menu);
+        listContainer.appendChild(container);
+      });
+    }
+
+    // إغلاق قائمة الخيارات عند الضغط خارجها
+    document.addEventListener('click', () => {
+      document.querySelectorAll('.options-menu').forEach(m => m.style.display = 'none');
+    });
+
+    // إضافة عنصر جديد
+    addBtn.addEventListener('click', () => {
+      const text = prompt('أدخل نص العنصر الجديد:');
+      if(text) {
+        const id = items.length ? items[items.length - 1].id + 1 : 1;
+        items.push({ id, text });
+        renderList();
       }
     });
+
+    // عرض القائمة لأول مرة
+    renderList();
   </script>
 
 </body>
