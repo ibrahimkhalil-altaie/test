@@ -1,322 +1,467 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <title>قائمة الطلاب المتقدمة</title>
-  <style>
-    /* ===== Body ===== */
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #f5f7fa;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      justify-content: center;
-      flex-direction: column;
-      align-items: center;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إدارة الطلاب | Student Manager</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-color: #121212;
+            --card-bg: #1e1e1e;
+            --input-bg: #2c2c2c;
+            --primary-color: #6c5ce7;
+            --primary-hover: #5649c0;
+            --accent-color: #00cec9;
+            --text-main: #ffffff;
+            --text-secondary: #b3b3b3;
+            --border-radius: 12px;
+            --shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
 
-    h1 {
-      text-align: center;
-      margin: 30px 0 20px 0;
-      color: #333;
-    }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Cairo', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
 
-    /* ===== Add Button ===== */
-    #addBtn {
-      padding: 12px 25px;
-      background-color: #4CAF50;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      font-size: 16px;
-      cursor: pointer;
-      transition: 0.3s;
-      margin-bottom: 25px;
-    }
-    #addBtn:hover {
-      background-color: #45a049;
-    }
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
 
-    /* ===== List Container ===== */
-    #listContainer {
-      width: 90%;
-      max-width: 700px;
-    }
+        .container {
+            width: 100%;
+            max-width: 600px;
+        }
 
-    .list-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 15px 20px;
-      margin-bottom: 15px;
-      background-color: #ffffff;
-      border-radius: 12px;
-      box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
-      transition: transform 0.2s;
-      position: relative;
-    }
+        /* --- Header --- */
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+            background: linear-gradient(to right, #6c5ce7, #00cec9);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
 
-    .list-item:hover {
-      transform: translateY(-2px);
-    }
+        /* --- Input Section --- */
+        .input-group {
+            background-color: var(--card-bg);
+            padding: 20px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 25px;
+            border: 1px solid #333;
+        }
 
-    .item-info {
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-    }
+        .form-control {
+            margin-bottom: 15px;
+        }
 
-    .item-info div {
-      font-size: 16px;
-      color: #333;
-    }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
 
-    /* ===== Options Button ===== */
-    .options-btn {
-      cursor: pointer;
-      padding: 6px 12px;
-      border: none;
-      background-color: #eee;
-      border-radius: 6px;
-      font-weight: bold;
-    }
+        input, select {
+            width: 100%;
+            padding: 12px 15px;
+            background-color: var(--input-bg);
+            border: 1px solid transparent;
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+            transition: 0.3s;
+            outline: none;
+        }
 
-    .options-menu {
-      display: none;
-      position: absolute;
-      top: 45px;
-      right: 20px;
-      background-color: white;
-      border-radius: 8px;
-      box-shadow: 0px 4px 10px rgba(0,0,0,0.15);
-      z-index: 100;
-      min-width: 120px;
-      overflow: hidden;
-    }
+        input:focus, select:focus {
+            border-color: var(--primary-color);
+            background-color: #363636;
+        }
 
-    .options-menu button {
-      display: block;
-      width: 100%;
-      padding: 10px 15px;
-      border: none;
-      background: none;
-      cursor: pointer;
-      text-align: right;
-      font-size: 14px;
-    }
+        button.add-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
 
-    .options-menu button:hover {
-      background-color: #f0f0f0;
-    }
+        button.add-btn:active {
+            transform: scale(0.98);
+        }
 
-    /* ===== Modal ===== */
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background-color: rgba(0,0,0,0.5);
-      justify-content: center;
-      align-items: center;
-      z-index: 200;
-    }
+        /* --- Students List --- */
+        .student-list {
+            list-style: none;
+            padding-bottom: 80px; /* Space for scroll */
+        }
 
-    .modal-content {
-      background-color: #fff;
-      border-radius: 12px;
-      padding: 25px 30px;
-      width: 90%;
-      max-width: 400px;
-      box-shadow: 0px 4px 15px rgba(0,0,0,0.2);
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-    }
+        .student-card {
+            background-color: var(--card-bg);
+            padding: 15px 20px;
+            border-radius: var(--border-radius);
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow);
+            border-right: 4px solid var(--primary-color);
+            animation: slideIn 0.4s ease-out forwards;
+            position: relative;
+        }
 
-    .modal-content h2 {
-      margin: 0 0 10px 0;
-      color: #333;
-      text-align: center;
-    }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
-    .modal-content input, .modal-content select {
-      padding: 10px 12px;
-      font-size: 15px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      width: 100%;
-    }
+        .student-info {
+            flex-grow: 1;
+        }
 
-    .modal-content button {
-      padding: 10px 0;
-      background-color: #4CAF50;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      font-size: 16px;
-      cursor: pointer;
-      margin-top: 10px;
-      transition: 0.3s;
-    }
+        .student-name {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .student-name i {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
 
-    .modal-content button:hover {
-      background-color: #45a049;
-    }
+        .student-details {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            display: flex;
+            gap: 10px;
+        }
 
-    /* Responsive */
-    @media (max-width: 500px) {
-      .item-info div {
-        font-size: 14px;
-      }
-      .options-btn {
-        padding: 4px 8px;
-      }
-    }
+        .badge {
+            background-color: rgba(108, 92, 231, 0.15);
+            color: #a29bfe;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+        
+        .badge.section {
+            background-color: rgba(0, 206, 201, 0.15);
+            color: #81ecec;
+        }
 
-  </style>
+        /* --- Action Button (3 Dots) --- */
+        .action-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 50%;
+            transition: 0.3s;
+        }
+
+        .action-btn:hover {
+            background-color: rgba(255,255,255,0.1);
+            color: white;
+        }
+
+        /* --- Modal (Popup) --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(5px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal {
+            background-color: var(--card-bg);
+            width: 90%;
+            max-width: 400px;
+            padding: 25px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            transform: scale(0.8);
+            transition: transform 0.3s;
+            border: 1px solid #333;
+        }
+
+        .modal-overlay.active .modal {
+            transform: scale(1);
+        }
+
+        .modal h3 {
+            margin-bottom: 20px;
+            text-align: center;
+            color: var(--primary-color);
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn-save {
+            flex: 2;
+            padding: 10px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .btn-cancel {
+            flex: 1;
+            padding: 10px;
+            background-color: #333;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        /* رسالة عند عدم وجود طلاب */
+        .empty-state {
+            text-align: center;
+            color: #555;
+            margin-top: 50px;
+            font-size: 1.2rem;
+            display: none;
+        }
+    </style>
 </head>
 <body>
 
-  <h1>قائمة الطلاب</h1>
-  <button id="addBtn">إضافة طالب جديد</button>
+    <div class="container">
+        <header>
+            <i class="fas fa-user-graduate fa-2x" style="color: var(--primary-color); margin-bottom: 10px;"></i>
+            <h1>سجل الطلاب</h1>
+        </header>
 
-  <div id="listContainer"></div>
+        <div class="input-group">
+            <div class="form-control">
+                <label>الاسم الثلاثي</label>
+                <input type="text" id="studentName" placeholder="مثال: أحمد محمد علي">
+            </div>
 
-  <!-- Modal إضافة الطالب -->
-  <div id="modal" class="modal">
-    <div class="modal-content">
-      <h2>إضافة طالب جديد</h2>
-      <input type="text" id="studentName" placeholder="الاسم">
-      <select id="studentGrade">
-        <option value="">اختر الصف</option>
-        <option value="الرابع علمي">الرابع علمي</option>
-        <option value="الخامس علمي">الخامس علمي</option>
-        <option value="السادس علمي">السادس علمي</option>
-      </select>
-      <select id="studentSection">
-        <option value="">اختر الشعبة</option>
-        <option value="ألف">ألف</option>
-        <option value="باء">باء</option>
-        <option value="جيم">جيم</option>
-      </select>
-      <button id="saveStudent">حفظ الطالب</button>
+            <div style="display: flex; gap: 10px;">
+                <div class="form-control" style="flex: 1;">
+                    <label>الصف</label>
+                    <select id="studentGrade">
+                        <option value="الرابع علمي">الرابع علمي</option>
+                        <option value="الخامس علمي">الخامس علمي</option>
+                        <option value="السادس علمي">السادس علمي</option>
+                    </select>
+                </div>
+                <div class="form-control" style="flex: 1;">
+                    <label>الشعبة</label>
+                    <select id="studentSection">
+                        <option value="أ">أ</option>
+                        <option value="ب">ب</option>
+                        <option value="ج">ج</option>
+                        <option value="د">د</option>
+                    </select>
+                </div>
+            </div>
+
+            <button class="add-btn" onclick="addStudent()">
+                <i class="fas fa-plus"></i> إضافة طالب
+            </button>
+        </div>
+
+        <div id="emptyMsg" class="empty-state">لا يوجد طلاب مضافين حالياً</div>
+        <ul class="student-list" id="studentList">
+            </ul>
     </div>
-  </div>
 
-  <script>
-    const listContainer = document.getElementById('listContainer');
-    const addBtn = document.getElementById('addBtn');
-    const modal = document.getElementById('modal');
-    const saveStudent = document.getElementById('saveStudent');
+    <div class="modal-overlay" id="editModal">
+        <div class="modal">
+            <h3>تعديل البيانات</h3>
+            <input type="hidden" id="editId">
+            
+            <div class="form-control">
+                <label>اسم الطالب (للعرض فقط)</label>
+                <input type="text" id="editName" disabled style="opacity: 0.6; cursor: not-allowed;">
+            </div>
 
-    const studentName = document.getElementById('studentName');
-    const studentGrade = document.getElementById('studentGrade');
-    const studentSection = document.getElementById('studentSection');
+            <div class="form-control">
+                <label>تعديل الصف</label>
+                <select id="editGrade">
+                    <option value="الرابع علمي">الرابع علمي</option>
+                    <option value="الخامس علمي">الخامس علمي</option>
+                    <option value="السادس علمي">السادس علمي</option>
+                </select>
+            </div>
 
-    let items = [];
+            <div class="form-control">
+                <label>تعديل الشعبة</label>
+                <select id="editSection">
+                    <option value="أ">أ</option>
+                    <option value="ب">ب</option>
+                    <option value="ج">ج</option>
+                    <option value="د">د</option>
+                </select>
+            </div>
 
-    function renderList() {
-      listContainer.innerHTML = '';
-      items.forEach(item => {
-        const listItem = document.createElement('div');
-        listItem.className = 'list-item';
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="closeModal()">إلغاء</button>
+                <button class="btn-save" onclick="saveChanges()">حفظ التعديلات</button>
+            </div>
+        </div>
+    </div>
 
-        // معلومات الطالب
-        const infoDiv = document.createElement('div');
-        infoDiv.className = 'item-info';
-        infoDiv.innerHTML = `
-          <div><strong>الاسم:</strong> ${item.name}</div>
-          <div><strong>الصف:</strong> ${item.grade}</div>
-          <div><strong>الشعبة:</strong> ${item.section}</div>
-        `;
+    <script>
+        // مصفوفة لتخزين بيانات الطلاب
+        let students = [];
+        
+        const listContainer = document.getElementById('studentList');
+        const emptyMsg = document.getElementById('emptyMsg');
 
-        // زر الثلاث نقاط
-        const optionsBtn = document.createElement('button');
-        optionsBtn.className = 'options-btn';
-        optionsBtn.textContent = '⋮';
+        // Modal Elements
+        const modal = document.getElementById('editModal');
+        const editIdInput = document.getElementById('editId');
+        const editNameInput = document.getElementById('editName');
+        const editGradeInput = document.getElementById('editGrade');
+        const editSectionInput = document.getElementById('editSection');
 
-        // قائمة الخيارات
-        const menu = document.createElement('div');
-        menu.className = 'options-menu';
+        // التحقق من وجود طلاب عند التحميل
+        checkEmpty();
 
-        const editBtn = document.createElement('button');
-        editBtn.textContent = 'تعديل';
-        editBtn.addEventListener('click', () => {
-          studentName.value = item.name;
-          studentGrade.value = item.grade;
-          studentSection.value = item.section;
-          modal.style.display = 'flex';
+        function addStudent() {
+            const name = document.getElementById('studentName').value;
+            const grade = document.getElementById('studentGrade').value;
+            const section = document.getElementById('studentSection').value;
 
-          saveStudent.onclick = () => {
-            if(studentName.value && studentGrade.value && studentSection.value){
-              item.name = studentName.value;
-              item.grade = studentGrade.value;
-              item.section = studentSection.value;
-              modal.style.display = 'none';
-              renderList();
-              studentName.value = '';
-              studentGrade.value = '';
-              studentSection.value = '';
+            if (name.trim() === "") {
+                alert("يرجى كتابة الاسم الثلاثي");
+                return;
             }
-          };
+
+            const student = {
+                id: Date.now(), // معرف فريد
+                name: name,
+                grade: grade,
+                section: section
+            };
+
+            students.push(student);
+            renderStudents();
+            
+            // تنظيف الحقول
+            document.getElementById('studentName').value = "";
+            checkEmpty();
+        }
+
+        function renderStudents() {
+            listContainer.innerHTML = "";
+            
+            students.forEach(student => {
+                const li = document.createElement('li');
+                li.className = 'student-card';
+                li.innerHTML = `
+                    <div class="student-info">
+                        <div class="student-name">
+                            <i class="fas fa-user-circle"></i> ${student.name}
+                        </div>
+                        <div class="student-details">
+                            <span class="badge">${student.grade}</span>
+                            <span class="badge section">شعبة ${student.section}</span>
+                        </div>
+                    </div>
+                    <button class="action-btn" onclick="openEditModal(${student.id})">
+                        <i class="fas fa-ellipsis-v"></i>
+                    </button>
+                `;
+                listContainer.appendChild(li);
+            });
+        }
+
+        function openEditModal(id) {
+            const student = students.find(s => s.id === id);
+            if (student) {
+                editIdInput.value = student.id;
+                editNameInput.value = student.name;
+                editGradeInput.value = student.grade;
+                editSectionInput.value = student.section;
+                
+                modal.classList.add('active');
+            }
+        }
+
+        function saveChanges() {
+            const id = parseInt(editIdInput.value);
+            const newGrade = editGradeInput.value;
+            const newSection = editSectionInput.value;
+
+            // تحديث المصفوفة
+            const index = students.findIndex(s => s.id === id);
+            if (index !== -1) {
+                students[index].grade = newGrade;
+                students[index].section = newSection;
+                renderStudents();
+                closeModal();
+            }
+        }
+
+        function closeModal() {
+            modal.classList.remove('active');
+        }
+
+        function checkEmpty() {
+            if (students.length === 0) {
+                emptyMsg.style.display = "block";
+            } else {
+                emptyMsg.style.display = "none";
+            }
+        }
+
+        // إغلاق المودال عند الضغط خارجه
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeModal();
+            }
         });
-
-        const deleteBtn = document.createElement('button');
-        deleteBtn.textContent = 'حذف';
-        deleteBtn.addEventListener('click', () => {
-          items = items.filter(i => i !== item);
-          renderList();
-        });
-
-        menu.appendChild(editBtn);
-        menu.appendChild(deleteBtn);
-
-        optionsBtn.addEventListener('click', (e) => {
-          e.stopPropagation();
-          document.querySelectorAll('.options-menu').forEach(m => m.style.display='none');
-          menu.style.display = 'block';
-        });
-
-        listItem.appendChild(infoDiv);
-        listItem.appendChild(optionsBtn);
-        listItem.appendChild(menu);
-        listContainer.appendChild(listItem);
-      });
-    }
-
-    // إغلاق أي قائمة خيارات عند الضغط خارجها
-    document.addEventListener('click', () => {
-      document.querySelectorAll('.options-menu').forEach(m => m.style.display='none');
-    });
-
-    // فتح المودال عند الضغط على إضافة طالب
-    addBtn.addEventListener('click', () => {
-      modal.style.display = 'flex';
-    });
-
-    // حفظ الطالب الجديد من المودال
-    saveStudent.addEventListener('click', () => {
-      if(studentName.value && studentGrade.value && studentSection.value){
-        const id = items.length ? items[items.length -1].id +1 : 1;
-        items.push({ id, name: studentName.value, grade: studentGrade.value, section: studentSection.value });
-        modal.style.display = 'none';
-        studentName.value = '';
-        studentGrade.value = '';
-        studentSection.value = '';
-        renderList();
-      }
-    });
-
-    // إغلاق المودال عند الضغط خارجه
-    modal.addEventListener('click', (e) => {
-      if(e.target === modal){
-        modal.style.display = 'none';
-      }
-    });
-
-    renderList();
-  </script>
-
+    </script>
 </body>
 </html>
