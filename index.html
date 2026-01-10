@@ -3,18 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تسجيل الدخول | اعدادية جلولاء</title>
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <title>تسجيل الدخول | إعدادية جلولاء</title>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            --bg: #000000;
+            --bg-image: url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop'); /* خلفية تقنية خافتة */
+            --glass-bg: rgba(10, 10, 10, 0.7);
             --fg: #ffffff;
-            --gray-100: #111111;
-            --gray-200: #333333;
+            --amber: #FFB300;
+            --gray-200: rgba(255, 255, 255, 0.1);
             --gray-500: #888888;
-            --blue: #0070f3;
-            --radius: 8px;
+            --radius: 12px;
             --font: 'IBM Plex Sans Arabic', sans-serif;
         }
 
@@ -26,7 +26,9 @@
         }
 
         body {
-            background-color: var(--bg);
+            background-color: #000;
+            /* إضافة خلفية متدرجة خفيفة لتعزيز تأثير الزجاج */
+            background-image: radial-gradient(circle at 50% 50%, #1a1a1a 0%, #000 100%);
             color: var(--fg);
             font-family: var(--font);
             display: flex;
@@ -34,14 +36,23 @@
             justify-content: center;
             height: 100vh;
             padding: 20px;
+            overflow: hidden;
         }
 
+        /* --- Glass Card --- */
         .login-card {
             width: 100%;
-            max-width: 400px;
+            max-width: 420px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid var(--gray-200);
+            border-radius: 24px;
+            padding: 40px 30px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
             display: flex;
             flex-direction: column;
-            gap: 30px;
+            gap: 25px;
         }
 
         header {
@@ -49,22 +60,25 @@
         }
 
         header h1 {
-            font-size: 28px;
+            font-size: 24px;
             font-weight: 700;
-            letter-spacing: -1px;
+            letter-spacing: -0.5px;
             margin-bottom: 8px;
+            background: linear-gradient(to bottom, #fff, #888);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         header p {
             color: var(--gray-500);
-            font-size: 14px;
+            font-size: 13px;
         }
 
-        /* --- Form Elements --- */
+        /* --- Form --- */
         .form-group {
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 16px;
         }
 
         .field {
@@ -73,122 +87,134 @@
             gap: 8px;
         }
 
+        .row {
+            display: flex;
+            gap: 12px;
+        }
+
         label {
-            font-size: 12px;
-            font-weight: 500;
-            color: var(--gray-500);
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--amber);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
             padding-right: 4px;
         }
 
         input, .custom-select {
             width: 100%;
-            height: 48px;
-            background: var(--bg);
+            height: 50px;
+            background: rgba(255, 255, 255, 0.05);
             border: 1px solid var(--gray-200);
             border-radius: var(--radius);
             color: var(--fg);
             padding: 0 16px;
             font-size: 14px;
             font-family: var(--font);
-            transition: all 0.2s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex;
             align-items: center;
             cursor: pointer;
         }
 
         input:focus {
-            border-color: var(--fg);
-            box-shadow: 0 0 0 1px var(--fg);
+            border-color: var(--amber);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 0 1px var(--amber);
         }
 
-        /* Custom Select Placeholder */
         .custom-select {
             justify-content: space-between;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .custom-select span {
+            font-size: 13px;
             color: var(--gray-500);
         }
 
-        .custom-select.selected {
+        .custom-select.selected span {
             color: var(--fg);
         }
 
         /* Login Button */
         .btn-login {
-            background: var(--fg);
+            background: var(--amber);
             color: #000;
             border: none;
-            height: 48px;
+            height: 52px;
             border-radius: var(--radius);
             font-weight: 700;
-            font-size: 15px;
+            font-size: 16px;
             cursor: pointer;
-            transition: opacity 0.2s;
+            transition: all 0.3s;
             margin-top: 10px;
+            box-shadow: 0 4px 15px rgba(255, 179, 0, 0.3);
         }
 
         .btn-login:hover {
-            opacity: 0.9;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 179, 0, 0.4);
         }
 
-        /* --- Modal / Dialog Styling --- */
+        /* --- Custom iPhone Dialog --- */
         .dialog-overlay {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.8);
-            backdrop-filter: blur(4px);
+            background: rgba(0,0,0,0.4);
+            backdrop-filter: blur(10px);
             display: none;
             align-items: center;
             justify-content: center;
             z-index: 1000;
+            padding: 20px;
         }
 
-        .dialog-overlay.active {
-            display: flex;
-        }
+        .dialog-overlay.active { display: flex; }
 
         .dialog {
-            background: var(--gray-100);
-            border: 1px solid var(--gray-200);
-            width: 90%;
-            max-width: 350px;
-            border-radius: 12px;
-            padding: 8px;
-            animation: modalPop 0.2s ease-out;
+            background: rgba(28, 28, 30, 0.95);
+            border: 1px solid rgba(255,255,255,0.1);
+            width: 100%;
+            max-width: 300px;
+            border-radius: 20px;
+            overflow: hidden;
+            animation: appleModal 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        @keyframes modalPop {
-            from { transform: scale(0.95); opacity: 0; }
+        @keyframes appleModal {
+            from { transform: scale(1.1); opacity: 0; }
             to { transform: scale(1); opacity: 1; }
         }
 
         .dialog-header {
-            padding: 16px;
-            font-size: 14px;
-            font-weight: 600;
-            border-bottom: 1px solid var(--gray-200);
-            margin-bottom: 8px;
+            padding: 20px 16px 10px;
             text-align: center;
+            font-weight: 600;
+            font-size: 16px;
         }
 
         .option-item {
-            padding: 14px 16px;
+            padding: 14px;
+            text-align: center;
+            color: var(--amber);
+            font-size: 16px;
+            border-top: 1px solid rgba(255,255,255,0.1);
             cursor: pointer;
-            border-radius: 6px;
             transition: background 0.2s;
-            font-size: 14px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
         }
 
-        .option-item:hover {
-            background: var(--gray-200);
+        .option-item:active {
+            background: rgba(255,255,255,0.1);
         }
 
         .footer-text {
             text-align: center;
-            font-size: 12px;
+            font-size: 11px;
             color: var(--gray-500);
-            margin-top: 20px;
+            opacity: 0.6;
         }
     </style>
 </head>
@@ -196,8 +222,8 @@
 
     <div class="login-card">
         <header>
-            <h1>اعدادية جلولاء للبنين</h1>
-            <p>سجل دخولك للوصول إلى التحاضير والنتائج</p>
+            <h1>إعدادية جلولاء للبنين</h1>
+            <p>نظام إدارة شؤون الطلاب الذكي</p>
         </header>
 
         <div class="form-group">
@@ -206,105 +232,85 @@
                 <input type="text" placeholder="أدخل رقمك التسلسلي" id="serialNum">
             </div>
 
-            <div class="field">
-                <label>الصف والشعبة</label>
-                <div class="custom-select" id="gradeTrigger" onclick="openGradeModal()">
-                    <span id="gradeText">اختر الصف والشعبة...</span>
-                    <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.93179 5.43179C4.75605 5.60753 4.75605 5.89245 4.93179 6.06819L7.5 8.6364L10.0682 6.06819C10.2439 5.89245 10.2439 5.60753 10.0682 5.43179C9.89245 5.25605 9.60753 5.25605 9.43179 5.43179L7.5 7.36358L5.56821 5.43179C5.39247 5.25605 5.10755 5.25605 4.93179 5.43179Z" fill="currentColor" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+            <div class="row">
+                <div class="field" style="flex: 2;">
+                    <label>الصف</label>
+                    <div class="custom-select" onclick="openModal('grade')">
+                        <span id="gradeVal">اختر الصف</span>
+                        <svg width="12" height="12" viewBox="0 0 15 15" fill="none" style="color:var(--amber)"><path d="M4.93 5.43L7.5 8.63L10.06 5.43" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                    </div>
+                </div>
+                <div class="field" style="flex: 1;">
+                    <label>الشعبة</label>
+                    <div class="custom-select" onclick="openModal('section')">
+                        <span id="secVal">الشعبة</span>
+                    </div>
                 </div>
             </div>
 
             <div class="field">
-                <label>كلمة السر</label>
+                <label>كلمة المرور</label>
                 <input type="password" placeholder="••••••••" id="password">
             </div>
 
-            <button class="btn-login" onclick="handleLogin()">تسجيل الدخول</button>
+            <button class="btn-login" onclick="login()">دخول النظام</button>
         </div>
 
-        <p class="footer-text">نظام إدارة الطلاب الذكي © 2026</p>
+        <p class="footer-text">حقوق الطبع محفوظة © 2026</p>
     </div>
 
-    <div class="dialog-overlay" id="modalOverlay">
-        <div class="dialog" id="gradeDialog">
-            <div class="dialog-header" id="dialogTitle">اختر الصف الدراسي</div>
-            <div id="optionsContainer">
-                </div>
+    <div class="dialog-overlay" id="overlay">
+        <div class="dialog">
+            <div class="dialog-header" id="modalTitle">العنوان</div>
+            <div id="options"></div>
+            <div class="option-item" style="color: #ff453a; font-weight: 600;" onclick="closeModal()">إلغاء</div>
         </div>
     </div>
 
     <script>
-        const grades = ["الرابع علمي", "الخامس علمي", "السادس علمي"];
-        const sections = ["أ", "ب", "ج", "د"];
-        
-        let selectedGrade = "";
-        let selectedSection = "";
+        const data = {
+            grade: ["الرابع علمي", "الخامس علمي", "السادس علمي"],
+            section: ["أ", "ب", "ج", "د"]
+        };
 
-        const overlay = document.getElementById('modalOverlay');
-        const container = document.getElementById('optionsContainer');
-        const dialogTitle = document.getElementById('dialogTitle');
-        const gradeTrigger = document.getElementById('gradeTrigger');
-        const gradeText = document.getElementById('gradeText');
+        const overlay = document.getElementById('overlay');
+        const optionsDiv = document.getElementById('options');
+        const modalTitle = document.getElementById('modalTitle');
 
-        function openGradeModal() {
-            showGrades();
+        function openModal(type) {
+            modalTitle.innerText = type === 'grade' ? "اختر الصف الدراسي" : "اختر الشعبة";
+            optionsDiv.innerHTML = '';
+            
+            data[type].forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'option-item';
+                div.innerText = type === 'section' ? `شعبة ${item}` : item;
+                div.onclick = () => {
+                    document.getElementById(type === 'grade' ? 'gradeVal' : 'secVal').innerText = item;
+                    document.getElementById(type === 'grade' ? 'gradeVal' : 'secVal').parentElement.classList.add('selected');
+                    closeModal();
+                };
+                optionsDiv.appendChild(div);
+            });
             overlay.classList.add('active');
         }
 
-        function showGrades() {
-            dialogTitle.innerText = "اختر الصف الدراسي";
-            container.innerHTML = '';
-            grades.forEach(g => {
-                const div = document.createElement('div');
-                div.className = 'option-item';
-                div.innerText = g;
-                div.onclick = () => {
-                    selectedGrade = g;
-                    showSections();
-                };
-                container.appendChild(div);
-            });
-        }
-
-        function showSections() {
-            dialogTitle.innerText = "اختر الشعبة";
-            container.innerHTML = '';
-            sections.forEach(s => {
-                const div = document.createElement('div');
-                div.className = 'option-item';
-                div.innerText = `شعبة ${s}`;
-                div.onclick = (e) => {
-                    e.stopPropagation();
-                    selectedSection = s;
-                    finishSelection();
-                };
-                container.appendChild(div);
-            });
-        }
-
-        function finishSelection() {
-            gradeText.innerText = `${selectedGrade} - شعبة ${selectedSection}`;
-            gradeTrigger.classList.add('selected');
+        function closeModal() {
             overlay.classList.remove('active');
         }
 
-        function handleLogin() {
-            const serial = document.getElementById('serialNum').value;
-            const pass = document.getElementById('password').value;
-
-            if(!serial || !selectedGrade || !pass) {
-                alert("يرجى إكمال كافة الحقول");
-                return;
-            }
-            
-            // هنا يمكنك توجيه المستخدم لصفحة التحاضير
-            alert("جاري تسجيل الدخول...");
+        function login() {
+            const btn = document.querySelector('.btn-login');
+            btn.innerText = "جاري التحقق...";
+            btn.style.opacity = "0.7";
+            setTimeout(() => {
+                alert("تم تسجيل الدخول بنجاح");
+                btn.innerText = "دخول النظام";
+                btn.style.opacity = "1";
+            }, 1500);
         }
 
-        // إغلاق عند الضغط خارجاً
-        overlay.addEventListener('click', (e) => {
-            if(e.target === overlay) overlay.classList.remove('active');
-        });
+        overlay.addEventListener('click', (e) => { if(e.target === overlay) closeModal(); });
     </script>
 </body>
 </html>
