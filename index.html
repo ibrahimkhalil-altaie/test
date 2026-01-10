@@ -1,42 +1,116 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="ar">
 <head>
-    <title>HTML Login Form</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تسجيل الدخول</title>
+  <style>
+    /* إعدادات عامة */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: linear-gradient(135deg, #6a11cb, #2575fc);
+    }
+
+    .login-container {
+      background: #fff;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+      width: 350px;
+      text-align: center;
+    }
+
+    .login-container h2 {
+      margin-bottom: 30px;
+      color: #333;
+    }
+
+    .input-group {
+      margin-bottom: 20px;
+      text-align: left;
+    }
+
+    .input-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+      color: #555;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+
+    .input-group input:focus {
+      border-color: #2575fc;
+      outline: none;
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 12px;
+      background: #2575fc;
+      border: none;
+      border-radius: 8px;
+      color: #fff;
+      font-size: 18px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .login-btn:hover {
+      background: #6a11cb;
+    }
+
+    .forgot-password {
+      margin-top: 15px;
+      font-size: 14px;
+      color: #555;
+    }
+
+    .forgot-password a {
+      color: #2575fc;
+      text-decoration: none;
+    }
+
+    .forgot-password a:hover {
+      text-decoration: underline;
+    }
+  </style>
 </head>
-
 <body>
-    <div class="main">
-        <h1>GeeksforGeeks</h1>
-        <h3>Enter your login credentials</h3>
 
-        <form action="">
-            <label for="first">
-                Username:
-            </label>
-            <input type="text" id="first" name="first" 
-                placeholder="Enter your Username" required>
-
-            <label for="password">
-                Password:
-            </label>
-            <input type="password" id="password" name="password" 
-                placeholder="Enter your Password" required>
-
-            <div class="wrap">
-                <button type="submit">
-                    Submit
-                </button>
-            </div>
-        </form>
-        
-        <p>Not registered?
-            <a href="#" style="text-decoration: none;">
-                Create an account
-            </a>
-        </p>
+  <div class="login-container">
+    <h2>تسجيل الدخول</h2>
+    <form>
+      <div class="input-group">
+        <label for="username">اسم المستخدم</label>
+        <input type="text" id="username" placeholder="أدخل اسم المستخدم">
+      </div>
+      <div class="input-group">
+        <label for="password">كلمة المرور</label>
+        <input type="password" id="password" placeholder="أدخل كلمة المرور">
+      </div>
+      <button type="submit" class="login-btn">دخول</button>
+    </form>
+    <div class="forgot-password">
+      <a href="#">نسيت كلمة المرور؟</a>
     </div>
-</body>
+  </div>
 
+</body>
 </html>
