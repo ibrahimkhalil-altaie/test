@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>الرئيسية | إعدادية جلولاء</title>
+    <title>لوحة الطالب | إعدادية جلولاء</title>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
     
     <style>
         :root {
@@ -25,197 +26,221 @@
 
         body {
             background-color: var(--bg);
-            /* تأثير إضاءة خلفية ناعم */
-            background-image: radial-gradient(circle at 10% 10%, rgba(255, 179, 0, 0.05) 0%, transparent 50%);
+            background-image: radial-gradient(circle at top right, rgba(255, 179, 0, 0.08) 0%, transparent 40%);
             color: var(--fg);
             font-family: var(--font);
             min-height: 100vh;
             display: flex;
             justify-content: center;
-            padding: 30px 20px;
+            padding: 20px;
         }
 
         .container {
             width: 100%;
-            max-width: 500px;
+            max-width: 450px;
             display: flex;
             flex-direction: column;
-            gap: 32px;
-        }
-
-        /* --- Welcome Section --- */
-        .welcome-card {
-            padding: 20px 0;
-            display: flex;
-            align-items: center;
             gap: 20px;
         }
 
-        .avatar-circle {
-            width: 65px;
-            height: 65px;
-            border-radius: 20px;
-            background: linear-gradient(135deg, var(--amber), #b37e00);
+        /* --- Header --- */
+        header {
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            font-weight: 700;
-            color: #000;
-            box-shadow: 0 10px 20px rgba(255, 179, 0, 0.2);
+            padding: 20px 5px;
+            margin-bottom: 10px;
         }
 
-        .user-details h1 {
-            font-size: 22px;
+        .user-info {
+            text-align: right;
+        }
+
+        .user-info h1 {
+            font-size: 20px;
             font-weight: 700;
             letter-spacing: -0.5px;
         }
 
-        .user-details p {
-            font-size: 14px;
+        .user-info p {
+            font-size: 13px;
             color: #888;
             margin-top: 4px;
         }
 
-        .status-pill {
-            display: inline-block;
-            margin-top: 8px;
-            padding: 2px 10px;
-            background: rgba(255, 179, 0, 0.1);
-            color: var(--amber);
-            border-radius: 6px;
-            font-size: 11px;
-            font-weight: 600;
+        .settings-btn {
+            width: 45px;
+            height: 45px;
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #45a2ff;
         }
 
-        /* --- Grid Layout for Sections --- */
-        .menu-grid {
+        /* --- Grid System --- */
+        .grid-top {
             display: grid;
-            grid-template-columns: 1fr;
-            gap: 16px;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
         }
 
-        .menu-item {
+        .grid-bottom {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 12px;
+        }
+
+        /* --- Card Styles --- */
+        .card {
             background: var(--glass);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border: 1px solid var(--glass-border);
-            border-radius: 22px;
+            border-radius: 20px;
             padding: 20px;
             display: flex;
-            align-items: center;
-            gap: 18px;
+            flex-direction: column;
+            gap: 12px;
             text-decoration: none;
             color: inherit;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .menu-item:hover {
-            background: rgba(255, 255, 255, 0.07);
+        .card:hover {
             border-color: var(--amber);
-            transform: scale(1.02);
+            background: rgba(255, 255, 255, 0.06);
+            transform: translateY(-3px);
         }
 
-        .icon-box {
-            width: 48px;
-            height: 48px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 14px;
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .icon-wrapper {
+            width: 38px;
+            height: 38px;
+            background: rgba(255, 179, 0, 0.1);
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 20px;
-            transition: all 0.3s;
+            color: var(--amber);
         }
 
-        .menu-item:hover .icon-box {
-            background: var(--amber);
-            color: #000;
-            transform: rotate(-5deg);
-        }
-
-        .text-content h3 {
+        .card h3 {
             font-size: 16px;
             font-weight: 600;
-            margin-bottom: 4px;
-        }
-
-        .text-content p {
-            font-size: 12px;
-            color: #666;
             line-height: 1.4;
         }
 
-        /* --- Design Polish --- */
-        .footer-note {
-            text-align: center;
-            margin-top: 20px;
-            font-size: 12px;
-            color: #333;
+        .card p {
+            font-size: 11px;
+            color: #666;
+            line-height: 1.6;
         }
+
+        /* Wide Card Specifics */
+        .card-wide {
+            padding: 25px;
+            flex-direction: row-reverse;
+            justify-content: space-between;
+            align-items: center;
+            text-align: right;
+        }
+
+        .card-wide .text-side {
+            flex: 1;
+        }
+
+        .card-wide h3 { font-size: 18px; margin-bottom: 6px; }
+
+        /* Bottom Cards Specifics */
+        .card-small {
+            padding: 15px 10px;
+            text-align: center;
+            align-items: center;
+        }
+        
+        .card-small .icon-wrapper {
+            margin-bottom: 5px;
+        }
+
+        .card-small h3 { font-size: 14px; }
+        .card-small p { font-size: 10px; }
 
     </style>
 </head>
 <body>
 
     <div class="container">
-        <section class="welcome-card">
-            <div class="avatar-circle">أ</div>
-            <div class="user-details">
-                <h1>ابراهيم خليل ابراهيم</h1>
-                <p>الرابع علمي • شعبة ألف</p>
-                <span class="status-pill">متصل الآن</span>
+        <header>
+            <div class="settings-btn">
+                <i data-lucide="settings" size="22"></i>
             </div>
-        </section>
+            <div class="user-info">
+                <h1>ابراهيم خليل ابراهيم</h1>
+                <p>الرابع علمي - شعبة ألف</p>
+            </div>
+        </header>
 
-        <nav class="menu-grid">
-            
-            <a href="#" class="menu-item">
-                <div class="icon-box">📊</div>
-                <div class="text-content">
-                    <h3>درجاتي</h3>
-                    <p>استعرض نتائج الامتحانات الشهرية والفصلية بدقة.</p>
-                </div>
-            </a>
-
-            <a href="#" class="menu-item">
-                <div class="icon-box">📝</div>
-                <div class="text-content">
-                    <h3>تحاضيري اليومية</h3>
-                    <p>تابع الواجبات والدروس المحددة لكل يوم.</p>
-                </div>
-            </a>
-
-            <a href="#" class="menu-item">
-                <div class="icon-box">📚</div>
-                <div class="text-content">
-                    <h3>الملازم والملخصات</h3>
-                    <p>تحميل المصادر الدراسية والملخصات المعتمدة.</p>
-                </div>
-            </a>
-
-            <a href="#" class="menu-item">
-                <div class="icon-box">🏛️</div>
-                <div class="text-content">
-                    <h3>الإدارة</h3>
-                    <p>الإعلانات الرسمية والتوجيهات الصادرة من الإدارة.</p>
-                </div>
-            </a>
-
-            <a href="#" class="menu-item" style="margin-top: 10px; border-style: dashed;">
-                <div class="icon-box">💡</div>
-                <div class="text-content">
+        <div class="grid-top">
+            <a href="#" class="card">
+                <div class="card-header">
+                    <div class="icon-wrapper"><i data-lucide="lightbulb" size="20"></i></div>
                     <h3>تقديم اقتراح</h3>
-                    <p>ساهم في تطوير مدرستك من خلال رأيك البنّاء.</p>
                 </div>
+                <p>يمكنك تقديم اقتراح لإدارة المدرسة لضمان تدريس أفضل</p>
             </a>
 
-        </nav>
+            <a href="#" class="card">
+                <div class="card-header">
+                    <div class="icon-wrapper"><i data-lucide="book-open" size="20"></i></div>
+                    <h3>تحاضيري اليومية</h3>
+                </div>
+                <p>يمكنك الاطلاع على الواجبات اليومية التي تُعطى لك أثناء الدوام</p>
+            </a>
+        </div>
 
-        <footer class="footer-note">
-            إعدادية جلولاء للبنين • الإصدار التقني 2026
-        </footer>
+        <a href="#" class="card card-wide">
+            <div class="icon-wrapper" style="width: 50px; height: 50px;">
+                <i data-lucide="file-text" size="24"></i>
+            </div>
+            <div class="text-side">
+                <h3>الملازم والملخصات</h3>
+                <p>يمكنك تحميل وقراءة الملازم والملخصات الخاصة بالمدرسين لضمان الحصول على أعلى درجة</p>
+            </div>
+        </a>
+
+        <div class="grid-bottom">
+            <a href="#" class="card card-small">
+                <div class="icon-wrapper"><i data-lucide="users" size="18"></i></div>
+                <h3>الممثل</h3>
+                <p>رؤية تبليغات ممثل شعبتك</p>
+            </a>
+
+            <a href="#" class="card card-small">
+                <div class="icon-wrapper"><i data-lucide="shield-check" size="18"></i></div>
+                <h3>الإدارة</h3>
+                <p>رؤية تبليغات الإدارة (هام)</p>
+            </a>
+
+            <a href="#" class="card card-small">
+                <div class="icon-wrapper"><i data-lucide="graduation-cap" size="18"></i></div>
+                <h3>درجاتي</h3>
+                <p>يمكنك رؤية جميع درجاتك</p>
+            </a>
+        </div>
+
     </div>
 
+    <script>
+        // تفعيل أيقونات Lucide
+        lucide.createIcons();
+    </script>
 </body>
 </html>
