@@ -3,17 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة الطالب | إعدادية جلولاء</title>
+    <title>إعدادية جلولاء | اللوحة الرئيسية</title>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     
     <style>
         :root {
-            --bg: #000000;
+            --bg: #050505;
             --fg: #FFFFFF;
             --amber: #FFB300;
             --glass: rgba(255, 255, 255, 0.03);
-            --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-hover: rgba(255, 255, 255, 0.07);
+            --border: rgba(255, 255, 255, 0.1);
             --font: 'IBM Plex Sans Arabic', sans-serif;
         }
 
@@ -26,21 +27,23 @@
 
         body {
             background-color: var(--bg);
-            background-image: radial-gradient(circle at top right, rgba(255, 179, 0, 0.08) 0%, transparent 40%);
+            background-image: 
+                radial-gradient(circle at 0% 0%, rgba(255, 179, 0, 0.05) 0%, transparent 30%),
+                radial-gradient(circle at 100% 100%, rgba(69, 162, 255, 0.05) 0%, transparent 30%);
             color: var(--fg);
             font-family: var(--font);
             min-height: 100vh;
             display: flex;
             justify-content: center;
-            padding: 20px;
+            padding: 40px 20px;
         }
 
-        .container {
+        .wrapper {
             width: 100%;
-            max-width: 450px;
+            max-width: 1000px; /* عرض أكبر للـ PC */
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 30px;
         }
 
         /* --- Header --- */
@@ -48,198 +51,200 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 20px 5px;
             margin-bottom: 10px;
         }
 
-        .user-info {
-            text-align: right;
+        .user-profile {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
         }
 
-        .user-info h1 {
-            font-size: 20px;
+        .user-profile h1 {
+            font-size: clamp(20px, 4vw, 26px); /* حجم خط متكيف */
             font-weight: 700;
-            letter-spacing: -0.5px;
         }
 
-        .user-info p {
-            font-size: 13px;
+        .user-profile p {
+            font-size: 14px;
             color: #888;
-            margin-top: 4px;
+            margin-top: 5px;
         }
 
-        .settings-btn {
-            width: 45px;
-            height: 45px;
+        .btn-settings {
+            width: 48px;
+            height: 48px;
             background: var(--glass);
-            border: 1px solid var(--glass-border);
-            border-radius: 12px;
+            border: 1px solid var(--border);
+            border-radius: 15px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: #45a2ff;
+            transition: 0.3s;
         }
 
-        /* --- Grid System --- */
-        .grid-top {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
+        .btn-settings:hover {
+            background: #45a2ff22;
+            transform: rotate(45deg);
         }
 
-        .grid-bottom {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 12px;
-        }
-
-        /* --- Card Styles --- */
+        /* --- Global Card Design --- */
         .card {
             background: var(--glass);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
+            border: 1px solid var(--border);
+            border-radius: 28px;
+            padding: 24px;
             text-decoration: none;
             color: inherit;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            overflow: hidden;
         }
 
         .card:hover {
             border-color: var(--amber);
-            background: rgba(255, 255, 255, 0.06);
-            transform: translateY(-3px);
+            background: var(--glass-hover);
+            transform: translateY(-5px);
         }
 
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-        }
-
-        .icon-wrapper {
-            width: 38px;
-            height: 38px;
+        .card .icon-box {
+            width: 44px;
+            height: 44px;
             background: rgba(255, 179, 0, 0.1);
-            border-radius: 10px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: var(--amber);
+            margin-bottom: 20px; /* الأيقونة فوق دائماً */
+            transition: 0.3s;
+        }
+
+        .card:hover .icon-box {
+            background: var(--amber);
+            color: #000;
         }
 
         .card h3 {
-            font-size: 16px;
+            font-size: 18px;
             font-weight: 600;
-            line-height: 1.4;
+            margin-bottom: 8px;
         }
 
         .card p {
-            font-size: 11px;
-            color: #666;
+            font-size: 13px;
+            color: #777;
             line-height: 1.6;
         }
 
-        /* Wide Card Specifics */
-        .card-wide {
-            padding: 25px;
-            flex-direction: row-reverse;
-            justify-content: space-between;
+        /* --- Responsive Grids --- */
+        /* الجريد العلوي: 2 في الهاتف و 2 في الـ PC */
+        .top-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        /* الجريد السفلي: يتغير من 1 إلى 3 أعمدة */
+        .bottom-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 20px;
+        }
+
+        /* تخصيص المربع العريض للملازم */
+        .wide-card {
+            flex-direction: row;
             align-items: center;
-            text-align: right;
+            gap: 25px;
+            padding: 35px;
         }
 
-        .card-wide .text-side {
-            flex: 1;
+        .wide-card .icon-box {
+            margin-bottom: 0; /* في العريض تكون بجانب النص */
+            width: 60px;
+            height: 60px;
         }
 
-        .card-wide h3 { font-size: 18px; margin-bottom: 6px; }
-
-        /* Bottom Cards Specifics */
-        .card-small {
-            padding: 15px 10px;
-            text-align: center;
-            align-items: center;
-        }
-        
-        .card-small .icon-wrapper {
-            margin-bottom: 5px;
+        /* --- Media Queries (PC Adjustments) --- */
+        @media (min-width: 768px) {
+            .wrapper { gap: 40px; }
+            .top-row { grid-template-columns: repeat(2, 1fr); }
+            .bottom-row { grid-template-columns: repeat(3, 1fr); }
+            .card h3 { font-size: 20px; }
         }
 
-        .card-small h3 { font-size: 14px; }
-        .card-small p { font-size: 10px; }
-
+        /* للهواتف الصغيرة جداً */
+        @media (max-width: 400px) {
+            .top-row { grid-template-columns: 1fr; }
+            .bottom-row { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
 
-    <div class="container">
+    <div class="wrapper">
         <header>
-            <div class="settings-btn">
-                <i data-lucide="settings" size="22"></i>
+            <div class="user-profile">
+                <h1>إبراهيم خليل إبراهيم</h1>
+                <p>الرابع علمي • شعبة ألف</p>
             </div>
-            <div class="user-info">
-                <h1>ابراهيم خليل ابراهيم</h1>
-                <p>الرابع علمي - شعبة ألف</p>
+            <div class="btn-settings">
+                <i data-lucide="settings"></i>
             </div>
         </header>
 
-        <div class="grid-top">
+        <div class="top-row">
             <a href="#" class="card">
-                <div class="card-header">
-                    <div class="icon-wrapper"><i data-lucide="lightbulb" size="20"></i></div>
-                    <h3>تقديم اقتراح</h3>
-                </div>
-                <p>يمكنك تقديم اقتراح لإدارة المدرسة لضمان تدريس أفضل</p>
+                <div class="icon-box"><i data-lucide="book-open"></i></div>
+                <h3>تحاضيري اليومية</h3>
+                <p>اطلع على الواجبات والدروس اليومية المحدثة باستمرار.</p>
             </a>
-
             <a href="#" class="card">
-                <div class="card-header">
-                    <div class="icon-wrapper"><i data-lucide="book-open" size="20"></i></div>
-                    <h3>تحاضيري اليومية</h3>
-                </div>
-                <p>يمكنك الاطلاع على الواجبات اليومية التي تُعطى لك أثناء الدوام</p>
+                <div class="icon-box"><i data-lucide="lightbulb"></i></div>
+                <h3>تقديم اقتراح</h3>
+                <p>رأيك يهمنا، شاركنا أفكارك لتطوير بيئتنا المدرسية.</p>
             </a>
         </div>
 
-        <a href="#" class="card card-wide">
-            <div class="icon-wrapper" style="width: 50px; height: 50px;">
-                <i data-lucide="file-text" size="24"></i>
-            </div>
-            <div class="text-side">
-                <h3>الملازم والملخصات</h3>
-                <p>يمكنك تحميل وقراءة الملازم والملخصات الخاصة بالمدرسين لضمان الحصول على أعلى درجة</p>
+        <a href="#" class="card wide-card">
+            <div class="icon-box"><i data-lucide="folder-down" size="28"></i></div>
+            <div>
+                <h3>الملازم والملخصات الدراسية</h3>
+                <p>مكتبة رقمية شاملة لجميع الملخصات والملازم المعتمدة لكل المواد.</p>
             </div>
         </a>
 
-        <div class="grid-bottom">
-            <a href="#" class="card card-small">
-                <div class="icon-wrapper"><i data-lucide="users" size="18"></i></div>
+        <div class="bottom-row">
+            <a href="#" class="card">
+                <div class="icon-box"><i data-lucide="user-check"></i></div>
                 <h3>الممثل</h3>
-                <p>رؤية تبليغات ممثل شعبتك</p>
+                <p>تبليغات ممثل الشعبة.</p>
             </a>
-
-            <a href="#" class="card card-small">
-                <div class="icon-wrapper"><i data-lucide="shield-check" size="18"></i></div>
+            <a href="#" class="card">
+                <div class="icon-box"><i data-lucide="landmark"></i></div>
                 <h3>الإدارة</h3>
-                <p>رؤية تبليغات الإدارة (هام)</p>
+                <p>القرارات الرسمية الهامة.</p>
             </a>
-
-            <a href="#" class="card card-small">
-                <div class="icon-wrapper"><i data-lucide="graduation-cap" size="18"></i></div>
+            <a href="#" class="card">
+                <div class="icon-box"><i data-lucide="award"></i></div>
                 <h3>درجاتي</h3>
-                <p>يمكنك رؤية جميع درجاتك</p>
+                <p>كشف الدرجات والنتائج.</p>
             </a>
         </div>
 
+        <footer style="text-align: center; color: #333; font-size: 12px; margin-top: 20px;">
+            نظام إدارة شؤون الطلاب الذكي © 2026
+        </footer>
     </div>
 
     <script>
-        // تفعيل أيقونات Lucide
+        // تشغيل الأيقونات
         lucide.createIcons();
     </script>
 </body>
