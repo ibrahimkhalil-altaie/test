@@ -3,258 +3,172 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>إعدادية جلولاء للبنين | المنصة الرسمية</title>
+    <title>منصة إعدادية جلولاء الذكية</title>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     
     <style>
         :root {
-            --bg-body: #FDFDFD;
-            --white: #FFFFFF;
-            --primary-blue: #0056b3;
+            --bg: #000000;
+            --card-bg: rgba(12, 12, 12, 0.7);
+            --border: rgba(255, 255, 255, 0.1);
             --amber: #FFB300;
-            --text-main: #1A1A1A;
-            --text-muted: #666666;
-            --border-light: rgba(0, 0, 0, 0.06);
+            --blue: #0070f3;
+            --text-main: #ffffff;
+            --text-dim: #888888;
             --font: 'IBM Plex Sans Arabic', sans-serif;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            -webkit-tap-highlight-color: transparent;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
         body {
-            background-color: var(--bg-body);
+            background-color: var(--bg);
             color: var(--text-main);
             font-family: var(--font);
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            overflow-x: hidden;
+            background-image: radial-gradient(circle at 50% -20%, #111 0%, #000 100%);
         }
 
-        /* --- Official Top Navbar --- */
-        .top-nav {
-            width: 100%;
-            height: 65px;
-            background: var(--white);
-            border-bottom: 1px solid var(--border-light);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
-        }
+        .page { display: none; animation: fadeIn 0.4s ease-out forwards; padding: 20px; width: 100%; max-width: 500px; margin: 0 auto; }
+        .page.active { display: block; }
 
-        .nav-content {
-            width: 100%;
-            max-width: 1000px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 20px;
-        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        .platform-name {
-            font-weight: 700;
-            font-size: 18px;
-            color: var(--primary-blue);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        /* --- Main Content Wrapper --- */
-        .wrapper {
-            width: 100%;
-            max-width: 550px;
-            padding: 30px 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        /* --- Header Section (User Info) --- */
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-
-        .user-card {
-            text-align: right;
-        }
-
-        .user-card h1 {
-            font-size: 22px;
-            font-weight: 700;
-        }
-
-        .user-card p {
-            font-size: 13px;
-            color: var(--text-muted);
-        }
-
-        .settings-icon {
-            width: 45px;
-            height: 45px;
-            background: #F0F4F8;
-            border-radius: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--primary-blue);
-        }
-
-        /* --- Card System (Strict Image Structure) --- */
-        .card {
-            background: var(--white);
-            border: 1px solid var(--border-light);
+        /* --- UI Components --- */
+        .glass-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
             border-radius: 24px;
-            padding: 22px;
-            text-decoration: none;
-            color: inherit;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start; /* الأيقونة يمين فوق */
-            text-align: right;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
-        }
-
-        .card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06);
-            border-color: var(--amber);
-        }
-
-        .icon-box {
-            width: 42px;
-            height: 42px;
-            background: #FFF9E6;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--amber);
+            padding: 25px;
             margin-bottom: 15px;
+            transition: 0.3s;
         }
 
-        .card h3 {
-            font-size: 17px;
-            font-weight: 700;
-            margin-bottom: 8px;
-            width: 100%;
+        .btn-primary {
+            width: 100%; height: 55px; background: var(--amber); color: #000; 
+            border: none; border-radius: 14px; font-weight: 700; font-size: 16px; cursor: pointer;
         }
 
-        .card p {
-            font-size: 12px;
-            color: var(--text-muted);
-            line-height: 1.6;
-            width: 100%;
+        input {
+            width: 100%; height: 50px; background: rgba(255,255,255,0.05); border: 1px solid var(--border);
+            border-radius: 12px; color: #fff; padding: 0 15px; margin-bottom: 15px; font-family: var(--font);
         }
 
-        /* Layout Grids */
-        .grid-top {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-        }
+        /* --- 1. Login Page --- */
+        #loginPage { text-align: center; padding-top: 10vh; }
+        #loginPage h1 { font-size: 28px; margin-bottom: 10px; }
 
-        .grid-bottom {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 12px;
-        }
+        /* --- 2. Dashboard --- */
+        .nav-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; padding: 10px 5px; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+        
+        .menu-card { text-align: right; cursor: pointer; }
+        .icon-box { width: 40px; height: 40px; background: rgba(255,179,0,0.1); border-radius: 10px; 
+                    display: flex; align-items: center; justify-content: center; color: var(--amber); margin-bottom: 15px; }
 
-        .card-wide {
-            padding: 28px;
-        }
+        /* --- 3. Posts & Lessons --- */
+        .back-btn { display: flex; align-items: center; gap: 8px; color: var(--amber); margin-bottom: 20px; cursor: pointer; font-size: 14px; }
+        .post-meta { display: flex; justify-content: space-between; margin-bottom: 15px; font-size: 12px; color: var(--text-dim); }
+        .badge { background: rgba(255,255,255,0.1); padding: 4px 10px; border-radius: 6px; font-size: 11px; }
 
-        /* لمسة الموقع الرسمي للـ PC */
-        @media (min-width: 1024px) {
-            .wrapper { max-width: 900px; gap: 25px; }
-            .grid-bottom { gap: 25px; }
-            .platform-name { font-size: 22px; }
-        }
     </style>
 </head>
 <body>
 
-    <nav class="top-nav">
-        <div class="nav-content">
-            <div class="platform-name">
-                <i data-lucide="school" size="24"></i>
-                إعدادية جلولاء للبنين
+    <div id="loginPage" class="page active">
+        <div class="glass-card">
+            <h1>إعدادية جلولاء</h1>
+            <p style="color: var(--text-dim); margin-bottom: 30px;">سجل دخولك للمتابعة</p>
+            <input type="text" placeholder="الرقم التسلسلي">
+            <input type="password" placeholder="كلمة المرور">
+            <button class="btn-primary" onclick="navTo('dashPage')">دخول النظام</button>
+        </div>
+    </div>
+
+    <div id="dashPage" class="page">
+        <div class="nav-header">
+            <div style="background: var(--card-bg); padding: 10px; border-radius: 12px; border: 1px solid var(--border);">
+                <i data-lucide="settings" color="#45a2ff"></i>
             </div>
-            <div style="font-size: 12px; color: #888; font-weight: 500;">
-                المنصة التعليمية الرسمية
+            <div style="text-align: right;">
+                <h2 style="font-size: 18px;">إبراهيم خليل إبراهيم</h2>
+                <p style="color: var(--text-dim); font-size: 12px;">الرابع علمي - أ</p>
             </div>
         </div>
-    </nav>
 
-    <div class="wrapper">
-        <header>
-            <div class="settings-icon">
-                <i data-lucide="settings" size="22"></i>
+        <div class="grid-2">
+            <div class="glass-card menu-card" onclick="navTo('lessonsPage')">
+                <div class="icon-box"><i data-lucide="book-open"></i></div>
+                <h3>تحاضيري</h3>
+                <p style="font-size: 11px; color: var(--text-dim);">الواجبات اليومية</p>
             </div>
-            <div class="user-card">
-                <h1>إبراهيم خليل إبراهيم</h1>
-                <p>الرابع علمي - شعبة ألف</p>
+            <div class="glass-card menu-card">
+                <div class="icon-box"><i data-lucide="lightbulb"></i></div>
+                <h3>اقتراح</h3>
+                <p style="font-size: 11px; color: var(--text-dim);">صندوق الأفكار</p>
             </div>
-        </header>
-
-        <div class="grid-top">
-            <a href="#" class="card">
-                <div class="icon-box"><i data-lucide="help-circle" size="22"></i></div>
-                <h3>تقديم اقتراح</h3>
-                <p>ساهم في تطوير مدرستك من خلال تقديم اقتراحاتك للإدارة.</p>
-            </a>
-            <a href="#" class="card">
-                <div class="icon-box"><i data-lucide="calendar-check" size="22"></i></div>
-                <h3>تحاضيري اليومية</h3>
-                <p>تعرف على المواد والدروس المقررة لك خلال اليوم الدراسي.</p>
-            </a>
         </div>
 
-        <a href="#" class="card card-wide">
-            <div class="icon-box" style="width: 50px; height: 50px;"><i data-lucide="library" size="24"></i></div>
-            <h3>الملازم والملخصات الدراسية</h3>
-            <p>تصفح وحمل كافة المواد التعليمية والملخصات التي يرفعها الأساتذة لضمان تفوقك.</p>
-        </a>
-
-        <div class="grid-bottom">
-            <a href="#" class="card" style="align-items: center; text-align: center;">
-                <div class="icon-box" style="background:#F4F4F4; color:#333;"><i data-lucide="user-voice" size="18"></i></div>
-                <h3 style="font-size: 14px;">الممثل</h3>
-                <p style="font-size: 10px;">تبليغات الشعبة</p>
-            </a>
-
-            <a href="#" class="card" style="align-items: center; text-align: center;">
-                <div class="icon-box" style="background:#FFF0F0; color:#E53E3E;"><i data-lucide="megaphone" size="18"></i></div>
-                <h3 style="font-size: 14px;">الإدارة</h3>
-                <p style="font-size: 10px;">إعلانات رسمية</p>
-            </a>
-
-            <a href="#" class="card" style="align-items: center; text-align: center;">
-                <div class="icon-box" style="background:#EBFEEF; color:#2F855A;"><i data-lucide="bar-chart-3" size="18"></i></div>
-                <h3 style="font-size: 14px;">درجاتي</h3>
-                <p style="font-size: 10px;">نتائج الامتحانات</p>
-            </a>
+        <div class="glass-card menu-card">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div class="icon-box" style="margin:0"><i data-lucide="library"></i></div>
+                <h3 style="font-size: 18px;">الملازم والملخصات</h3>
+            </div>
         </div>
 
-        <footer style="margin-top: 30px; text-align: center; color: #BBB; font-size: 11px;">
-            جميع الحقوق محفوظة لمحفظة الطالب الذكية © 2026
-        </footer>
+        <div class="grid-3">
+            <div class="glass-card menu-card" style="padding: 15px; text-align: center;" onclick="navTo('postsPage')">
+                <i data-lucide="megaphone" color="var(--amber)" style="margin: 0 auto 10px;"></i>
+                <p style="font-size: 12px;">الإدارة</p>
+            </div>
+            <div class="glass-card menu-card" style="padding: 15px; text-align: center;">
+                <i data-lucide="user-voice" color="var(--amber)" style="margin: 0 auto 10px;"></i>
+                <p style="font-size: 12px;">الممثل</p>
+            </div>
+            <div class="glass-card menu-card" style="padding: 15px; text-align: center;">
+                <i data-lucide="award" color="var(--amber)" style="margin: 0 auto 10px;"></i>
+                <p style="font-size: 12px;">درجاتي</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="lessonsPage" class="page">
+        <div class="back-btn" onclick="navTo('dashPage')"><i data-lucide="chevron-right"></i> العودة للرئيسية</div>
+        <h2 style="margin-bottom: 20px;">تحاضير يوم الثلاثاء</h2>
+        
+        <div class="glass-card">
+            <div class="post-meta"><span>مادة الفيزياء</span> <span class="badge">أ. عثمان</span></div>
+            <p>تحضير الفصل الرابع (العدسات) من صفحة 80 إلى 95 مع حل المسائل.</p>
+        </div>
+        <div class="glass-card">
+            <div class="post-meta"><span>مادة الأحياء</span> <span class="badge">الإدارة</span></div>
+            <p>رسم الجهاز الهضمي في دفتر الرسم البياني وتسليمه الحصة القادمة.</p>
+        </div>
+    </div>
+
+    <div id="postsPage" class="page">
+        <div class="back-btn" onclick="navTo('dashPage')"><i data-lucide="chevron-right"></i> العودة للرئيسية</div>
+        <h2 style="margin-bottom: 20px;">تبليغات الإدارة</h2>
+
+        <div class="glass-card">
+            <div class="post-meta"><span>تنبيه هام</span> <span>اليوم، 8:00 ص</span></div>
+            <p>على جميع الطلبة الالتزام بالزي الرسمي، سيتم منع المخالفين من دخول الحرم المدرسي.</p>
+            <div style="margin-top: 15px; color: var(--amber); font-size: 12px; font-weight: 600;">#إدارة_المدرسة</div>
+        </div>
     </div>
 
     <script>
+        // نظام التنقل البسيط
+        function navTo(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+            window.scrollTo(0, 0);
+        }
+
+        // تفعيل الأيقونات
         lucide.createIcons();
     </script>
 </body>
