@@ -3,248 +3,106 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>إعدادية جلولاء | اللوحة الرئيسية</title>
+    <title>منصة جلولاء | Supabase Integrated</title>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     
     <style>
         :root {
-            --bg: #050505;
-            --fg: #FFFFFF;
-            --amber: #FFB300;
-            --glass: rgba(255, 255, 255, 0.03);
-            --glass-hover: rgba(255, 255, 255, 0.07);
-            --border: rgba(255, 255, 255, 0.1);
-            --font: 'IBM Plex Sans Arabic', sans-serif;
+            --bg: #000; --fg: #fff; --border: #333; --gray: #111; --amber: #FFB300;
         }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background: var(--bg); color: var(--fg); font-family: 'IBM Plex Sans Arabic', sans-serif; overflow-x: hidden; }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            -webkit-tap-highlight-color: transparent;
-        }
+        /* الأنيميشن عند تبديل الصفحات */
+        .view { display: none; animation: slideIn 0.3s ease-out forwards; padding: 20px; max-width: 600px; margin: 0 auto; }
+        .view.active { display: block; }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        body {
-            background-color: var(--bg);
-            background-image: 
-                radial-gradient(circle at 0% 0%, rgba(255, 179, 0, 0.05) 0%, transparent 30%),
-                radial-gradient(circle at 100% 100%, rgba(69, 162, 255, 0.05) 0%, transparent 30%);
-            color: var(--fg);
-            font-family: var(--font);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            padding: 40px 20px;
-        }
+        /* نمط Vercel للبطاقات */
+        .card { background: var(--gray); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 15px; }
+        .loading-shimmer { background: linear-gradient(90deg, #111 25%, #222 50%, #111 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; height: 100px; border-radius: 12px; margin-bottom: 15px; }
+        @keyframes shimmer { 100% { background-position: -200% 0; } }
 
-        .wrapper {
-            width: 100%;
-            max-width: 1000px; /* عرض أكبر للـ PC */
-            display: flex;
-            flex-direction: column;
-            gap: 30px;
-        }
-
-        /* --- Header --- */
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-
-        .user-profile {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-        }
-
-        .user-profile h1 {
-            font-size: clamp(20px, 4vw, 26px); /* حجم خط متكيف */
-            font-weight: 700;
-        }
-
-        .user-profile p {
-            font-size: 14px;
-            color: #888;
-            margin-top: 5px;
-        }
-
-        .btn-settings {
-            width: 48px;
-            height: 48px;
-            background: var(--glass);
-            border: 1px solid var(--border);
-            border-radius: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #45a2ff;
-            transition: 0.3s;
-        }
-
-        .btn-settings:hover {
-            background: #45a2ff22;
-            transform: rotate(45deg);
-        }
-
-        /* --- Global Card Design --- */
-        .card {
-            background: var(--glass);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--border);
-            border-radius: 28px;
-            padding: 24px;
-            text-decoration: none;
-            color: inherit;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            overflow: hidden;
-        }
-
-        .card:hover {
-            border-color: var(--amber);
-            background: var(--glass-hover);
-            transform: translateY(-5px);
-        }
-
-        .card .icon-box {
-            width: 44px;
-            height: 44px;
-            background: rgba(255, 179, 0, 0.1);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--amber);
-            margin-bottom: 20px; /* الأيقونة فوق دائماً */
-            transition: 0.3s;
-        }
-
-        .card:hover .icon-box {
-            background: var(--amber);
-            color: #000;
-        }
-
-        .card h3 {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
-
-        .card p {
-            font-size: 13px;
-            color: #777;
-            line-height: 1.6;
-        }
-
-        /* --- Responsive Grids --- */
-        /* الجريد العلوي: 2 في الهاتف و 2 في الـ PC */
-        .top-row {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-        }
-
-        /* الجريد السفلي: يتغير من 1 إلى 3 أعمدة */
-        .bottom-row {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 20px;
-        }
-
-        /* تخصيص المربع العريض للملازم */
-        .wide-card {
-            flex-direction: row;
-            align-items: center;
-            gap: 25px;
-            padding: 35px;
-        }
-
-        .wide-card .icon-box {
-            margin-bottom: 0; /* في العريض تكون بجانب النص */
-            width: 60px;
-            height: 60px;
-        }
-
-        /* --- Media Queries (PC Adjustments) --- */
-        @media (min-width: 768px) {
-            .wrapper { gap: 40px; }
-            .top-row { grid-template-columns: repeat(2, 1fr); }
-            .bottom-row { grid-template-columns: repeat(3, 1fr); }
-            .card h3 { font-size: 20px; }
-        }
-
-        /* للهواتف الصغيرة جداً */
-        @media (max-width: 400px) {
-            .top-row { grid-template-columns: 1fr; }
-            .bottom-row { grid-template-columns: 1fr; }
-        }
+        header { padding: 30px 0; border-bottom: 1px solid var(--border); margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center; }
+        .btn-nav { cursor: pointer; padding: 10px 20px; border: 1px solid var(--border); border-radius: 8px; transition: 0.2s; }
+        .btn-nav:hover { background: var(--fg); color: var(--bg); }
     </style>
 </head>
 <body>
 
-    <div class="wrapper">
+    <div id="homeView" class="view active">
         <header>
-            <div class="user-profile">
-                <h1>إبراهيم خليل إبراهيم</h1>
-                <p>الرابع علمي • شعبة ألف</p>
-            </div>
-            <div class="btn-settings">
-                <i data-lucide="settings"></i>
-            </div>
+            <h1>الرئيسية</h1>
+            <div class="btn-nav" onclick="showView('lessonsView', fetchLessons)">تحاضيري اليومية <i data-lucide="chevron-left" style="vertical-align: middle;"></i></div>
         </header>
+        <div class="card">أهلاً بك يا إبراهيم، يمكنك متابعة تحاضيرك ودرجاتك من هنا.</div>
+    </div>
 
-        <div class="top-row">
-            <a href="#" class="card">
-                <div class="icon-box"><i data-lucide="book-open"></i></div>
-                <h3>تحاضيري اليومية</h3>
-                <p>اطلع على الواجبات والدروس اليومية المحدثة باستمرار.</p>
-            </a>
-            <a href="#" class="card">
-                <div class="icon-box"><i data-lucide="lightbulb"></i></div>
-                <h3>تقديم اقتراح</h3>
-                <p>رأيك يهمنا، شاركنا أفكارك لتطوير بيئتنا المدرسية.</p>
-            </a>
-        </div>
-
-        <a href="#" class="card wide-card">
-            <div class="icon-box"><i data-lucide="folder-down" size="28"></i></div>
-            <div>
-                <h3>الملازم والملخصات الدراسية</h3>
-                <p>مكتبة رقمية شاملة لجميع الملخصات والملازم المعتمدة لكل المواد.</p>
+    <div id="lessonsView" class="view">
+        <header>
+            <div onclick="showView('homeView')" style="cursor:pointer; color: var(--amber)"><i data-lucide="arrow-right"></i> عودة</div>
+            <h1>تحاضيري</h1>
+        </header>
+        
+        <div id="lessonsContainer">
             </div>
-        </a>
-
-        <div class="bottom-row">
-            <a href="#" class="card">
-                <div class="icon-box"><i data-lucide="user-check"></i></div>
-                <h3>الممثل</h3>
-                <p>تبليغات ممثل الشعبة.</p>
-            </a>
-            <a href="#" class="card">
-                <div class="icon-box"><i data-lucide="landmark"></i></div>
-                <h3>الإدارة</h3>
-                <p>القرارات الرسمية الهامة.</p>
-            </a>
-            <a href="#" class="card">
-                <div class="icon-box"><i data-lucide="award"></i></div>
-                <h3>درجاتي</h3>
-                <p>كشف الدرجات والنتائج.</p>
-            </a>
-        </div>
-
-        <footer style="text-align: center; color: #333; font-size: 12px; margin-top: 20px;">
-            نظام إدارة شؤون الطلاب الذكي © 2026
-        </footer>
     </div>
 
     <script>
-        // تشغيل الأيقونات
+        // إعدادات Supabase (ضع روابطك هنا)
+        const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+        const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY';
+
+        // وظيفة التنقل بين الصفحات
+        function showView(viewId, callback = null) {
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.getElementById(viewId).classList.add('active');
+            if (callback) callback();
+        }
+
+        // وظيفة جلب البيانات من Supabase
+        async function fetchLessons() {
+            const container = document.getElementById('lessonsContainer');
+            
+            // 1. إظهار تأثير التحميل (Shimmer)
+            container.innerHTML = `<div class="loading-shimmer"></div><div class="loading-shimmer"></div>`;
+
+            try {
+                // طلب البيانات من جدول 'lessons' في Supabase
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/lessons?select=*`, {
+                    headers: {
+                        'apikey': SUPABASE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_KEY}`
+                    }
+                });
+                const data = await response.json();
+
+                // 2. معالجة البيانات وعرضها
+                container.innerHTML = ''; // مسح الـ Loading
+                
+                if (data.length === 0) {
+                    container.innerHTML = '<div style="text-align:center; color:#666;">لا توجد تحاضير لليوم</div>';
+                } else {
+                    data.forEach(item => {
+                        // إخفاء الحقول الفارغة كما طلبت سابقاً
+                        if (item.content && item.content.trim() !== "") {
+                            container.innerHTML += `
+                                <div class="card">
+                                    <div style="color: var(--amber); font-weight:700; margin-bottom:10px;">${item.subject_name}</div>
+                                    <p style="font-size:15px; line-height:1.6;">${item.content}</p>
+                                    <div style="font-size:11px; color:#555; margin-top:10px;">أضيف بواسطة: ${item.teacher_name}</div>
+                                </div>
+                            `;
+                        }
+                    });
+                }
+            } catch (error) {
+                container.innerHTML = '<div style="color:red;">حدث خطأ في جلب البيانات</div>';
+                console.error(error);
+            }
+        }
+
         lucide.createIcons();
     </script>
 </body>
