@@ -3,173 +3,244 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منصة إعدادية جلولاء الذكية</title>
+    <title>رفع التحاضير | إعدادية جلولاء</title>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     
     <style>
         :root {
             --bg: #000000;
-            --card-bg: rgba(12, 12, 12, 0.7);
-            --border: rgba(255, 255, 255, 0.1);
+            --fg: #ffffff;
+            --gray: #111111;
+            --border: #333333;
             --amber: #FFB300;
-            --blue: #0070f3;
-            --text-main: #ffffff;
-            --text-dim: #888888;
             --font: 'IBM Plex Sans Arabic', sans-serif;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
             background-color: var(--bg);
-            color: var(--text-main);
+            color: var(--fg);
             font-family: var(--font);
-            min-height: 100vh;
-            overflow-x: hidden;
-            background-image: radial-gradient(circle at 50% -20%, #111 0%, #000 100%);
+            display: flex;
+            justify-content: center;
+            padding: 40px 20px;
         }
 
-        .page { display: none; animation: fadeIn 0.4s ease-out forwards; padding: 20px; width: 100%; max-width: 500px; margin: 0 auto; }
-        .page.active { display: block; }
+        .container { width: 100%; max-width: 600px; }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        header { margin-bottom: 40px; border-bottom: 1px solid var(--border); padding-bottom: 20px; }
+        header h1 { font-size: 24px; font-weight: 700; }
+        header p { color: #888; font-size: 14px; margin-top: 5px; }
 
-        /* --- UI Components --- */
-        .glass-card {
-            background: var(--card-bg);
-            backdrop-filter: blur(20px);
+        .form-section { display: flex; flex-direction: column; gap: 25px; }
+
+        label { display: block; font-size: 13px; font-weight: 500; color: #888; margin-bottom: 10px; }
+
+        /* تصفيف شبكة الكتب */
+        .subjects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 10px;
+        }
+
+        .subject-item {
             border: 1px solid var(--border);
-            border-radius: 24px;
-            padding: 25px;
-            margin-bottom: 15px;
-            transition: 0.3s;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 14px;
+            background: var(--gray);
         }
 
-        .btn-primary {
-            width: 100%; height: 55px; background: var(--amber); color: #000; 
-            border: none; border-radius: 14px; font-weight: 700; font-size: 16px; cursor: pointer;
+        .subject-item:hover { border-color: #666; }
+        .subject-item.active {
+            border-color: var(--amber);
+            background: rgba(255, 179, 0, 0.1);
+            color: var(--amber);
         }
 
-        input {
-            width: 100%; height: 50px; background: rgba(255,255,255,0.05); border: 1px solid var(--border);
-            border-radius: 12px; color: #fff; padding: 0 15px; margin-bottom: 15px; font-family: var(--font);
+        /* حقول الإدخال */
+        textarea {
+            width: 100%;
+            min-height: 120px;
+            background: var(--gray);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: white;
+            padding: 15px;
+            font-family: var(--font);
+            resize: none;
+            font-size: 15px;
         }
 
-        /* --- 1. Login Page --- */
-        #loginPage { text-align: center; padding-top: 10vh; }
-        #loginPage h1 { font-size: 28px; margin-bottom: 10px; }
+        textarea:focus { border-color: var(--fg); outline: none; }
 
-        /* --- 2. Dashboard --- */
-        .nav-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; padding: 10px 5px; }
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
-        
-        .menu-card { text-align: right; cursor: pointer; }
-        .icon-box { width: 40px; height: 40px; background: rgba(255,179,0,0.1); border-radius: 10px; 
-                    display: flex; align-items: center; justify-content: center; color: var(--amber); margin-bottom: 15px; }
+        /* زر التحميل والرفع */
+        .btn-submit {
+            width: 100%;
+            height: 50px;
+            background: var(--fg);
+            color: #000;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: 0.2s;
+        }
 
-        /* --- 3. Posts & Lessons --- */
-        .back-btn { display: flex; align-items: center; gap: 8px; color: var(--amber); margin-bottom: 20px; cursor: pointer; font-size: 14px; }
-        .post-meta { display: flex; justify-content: space-between; margin-bottom: 15px; font-size: 12px; color: var(--text-dim); }
-        .badge { background: rgba(255,255,255,0.1); padding: 4px 10px; border-radius: 6px; font-size: 11px; }
+        .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; }
 
+        /* الـ Loading Anim */
+        .loader {
+            width: 18px;
+            height: 18px;
+            border: 2px solid #000;
+            border-bottom-color: transparent;
+            border-radius: 50%;
+            display: none;
+            animation: rotation 0.6s linear infinite;
+        }
+
+        @keyframes rotation { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* الـ Dialog المخصص */
+        .dialog-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+
+        .dialog {
+            background: var(--gray);
+            border: 1px solid var(--border);
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            max-width: 300px;
+            width: 90%;
+            animation: slideUp 0.3s ease-out;
+        }
+
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+        .dialog i { color: #27ae60; margin-bottom: 15px; }
+        .btn-close {
+            margin-top: 20px;
+            background: transparent;
+            border: 1px solid var(--border);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
 
-    <div id="loginPage" class="page active">
-        <div class="glass-card">
-            <h1>إعدادية جلولاء</h1>
-            <p style="color: var(--text-dim); margin-bottom: 30px;">سجل دخولك للمتابعة</p>
-            <input type="text" placeholder="الرقم التسلسلي">
-            <input type="password" placeholder="كلمة المرور">
-            <button class="btn-primary" onclick="navTo('dashPage')">دخول النظام</button>
+<div class="container">
+    <header>
+        <h1>رفع تحضير جديد</h1>
+        <p>بوابة الأساتذة • إعدادية جلولاء للبنين</p>
+    </header>
+
+    <div class="form-section">
+        <div>
+            <label>اختر الكتاب / المادة</label>
+            <div class="subjects-grid" id="subjectsGrid">
+                <div class="subject-item" onclick="selectSub(this)">كيمياء</div>
+                <div class="subject-item" onclick="selectSub(this)">فيزياء</div>
+                <div class="subject-item" onclick="selectSub(this)">احياء</div>
+                <div class="subject-item" onclick="selectSub(this)">رياضيات</div>
+                <div class="subject-item" onclick="selectSub(this)">عربي</div>
+                <div class="subject-item" onclick="selectSub(this)">English</div>
+                <div class="subject-item" onclick="selectSub(this)">اسلامية</div>
+                <div class="subject-item" onclick="selectSub(this)">كردي</div>
+            </div>
         </div>
+
+        <div>
+            <label>نص التحضير اليومي</label>
+            <textarea id="lessonText" placeholder="اكتب تفاصيل التحضير هنا..."></textarea>
+        </div>
+
+        <div>
+            <label>ملاحظات إضافية (اختياري)</label>
+            <textarea id="noteText" placeholder="أي ملاحظات إضافية للطلبة..." style="min-height: 80px;"></textarea>
+        </div>
+
+        <button class="btn-submit" id="submitBtn" onclick="handleUpload()">
+            <span class="loader" id="loader"></span>
+            <span id="btnText">نشر التحضير الآن</span>
+        </button>
     </div>
+</div>
 
-    <div id="dashPage" class="page">
-        <div class="nav-header">
-            <div style="background: var(--card-bg); padding: 10px; border-radius: 12px; border: 1px solid var(--border);">
-                <i data-lucide="settings" color="#45a2ff"></i>
-            </div>
-            <div style="text-align: right;">
-                <h2 style="font-size: 18px;">إبراهيم خليل إبراهيم</h2>
-                <p style="color: var(--text-dim); font-size: 12px;">الرابع علمي - أ</p>
-            </div>
-        </div>
-
-        <div class="grid-2">
-            <div class="glass-card menu-card" onclick="navTo('lessonsPage')">
-                <div class="icon-box"><i data-lucide="book-open"></i></div>
-                <h3>تحاضيري</h3>
-                <p style="font-size: 11px; color: var(--text-dim);">الواجبات اليومية</p>
-            </div>
-            <div class="glass-card menu-card">
-                <div class="icon-box"><i data-lucide="lightbulb"></i></div>
-                <h3>اقتراح</h3>
-                <p style="font-size: 11px; color: var(--text-dim);">صندوق الأفكار</p>
-            </div>
-        </div>
-
-        <div class="glass-card menu-card">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <div class="icon-box" style="margin:0"><i data-lucide="library"></i></div>
-                <h3 style="font-size: 18px;">الملازم والملخصات</h3>
-            </div>
-        </div>
-
-        <div class="grid-3">
-            <div class="glass-card menu-card" style="padding: 15px; text-align: center;" onclick="navTo('postsPage')">
-                <i data-lucide="megaphone" color="var(--amber)" style="margin: 0 auto 10px;"></i>
-                <p style="font-size: 12px;">الإدارة</p>
-            </div>
-            <div class="glass-card menu-card" style="padding: 15px; text-align: center;">
-                <i data-lucide="user-voice" color="var(--amber)" style="margin: 0 auto 10px;"></i>
-                <p style="font-size: 12px;">الممثل</p>
-            </div>
-            <div class="glass-card menu-card" style="padding: 15px; text-align: center;">
-                <i data-lucide="award" color="var(--amber)" style="margin: 0 auto 10px;"></i>
-                <p style="font-size: 12px;">درجاتي</p>
-            </div>
-        </div>
+<div class="dialog-overlay" id="successDialog">
+    <div class="dialog">
+        <i data-lucide="check-circle-2" size="48"></i>
+        <h3 style="margin-bottom: 10px;">تم الرفع بنجاح</h3>
+        <p style="color: #888; font-size: 14px;">تم نشر التحضير وإرسال تنبيه للطلاب المشتركين.</p>
+        <button class="btn-close" onclick="closeDialog()">إغلاق</button>
     </div>
+</div>
 
-    <div id="lessonsPage" class="page">
-        <div class="back-btn" onclick="navTo('dashPage')"><i data-lucide="chevron-right"></i> العودة للرئيسية</div>
-        <h2 style="margin-bottom: 20px;">تحاضير يوم الثلاثاء</h2>
-        
-        <div class="glass-card">
-            <div class="post-meta"><span>مادة الفيزياء</span> <span class="badge">أ. عثمان</span></div>
-            <p>تحضير الفصل الرابع (العدسات) من صفحة 80 إلى 95 مع حل المسائل.</p>
-        </div>
-        <div class="glass-card">
-            <div class="post-meta"><span>مادة الأحياء</span> <span class="badge">الإدارة</span></div>
-            <p>رسم الجهاز الهضمي في دفتر الرسم البياني وتسليمه الحصة القادمة.</p>
-        </div>
-    </div>
+<script>
+    let selectedSubject = "";
 
-    <div id="postsPage" class="page">
-        <div class="back-btn" onclick="navTo('dashPage')"><i data-lucide="chevron-right"></i> العودة للرئيسية</div>
-        <h2 style="margin-bottom: 20px;">تبليغات الإدارة</h2>
+    function selectSub(el) {
+        document.querySelectorAll('.subject-item').forEach(i => i.classList.remove('active'));
+        el.classList.add('active');
+        selectedSubject = el.innerText;
+    }
 
-        <div class="glass-card">
-            <div class="post-meta"><span>تنبيه هام</span> <span>اليوم، 8:00 ص</span></div>
-            <p>على جميع الطلبة الالتزام بالزي الرسمي، سيتم منع المخالفين من دخول الحرم المدرسي.</p>
-            <div style="margin-top: 15px; color: var(--amber); font-size: 12px; font-weight: 600;">#إدارة_المدرسة</div>
-        </div>
-    </div>
+    function handleUpload() {
+        const text = document.getElementById('lessonText').value;
+        const btn = document.getElementById('submitBtn');
+        const loader = document.getElementById('loader');
+        const btnText = document.getElementById('btnText');
 
-    <script>
-        // نظام التنقل البسيط
-        function navTo(pageId) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById(pageId).classList.add('active');
-            window.scrollTo(0, 0);
-        }
+        if (!selectedSubject) { alert("يرجى اختيار المادة أولاً"); return; }
+        if (!text.trim()) { alert("يرجى كتابة نص التحضير"); return; }
 
-        // تفعيل الأيقونات
-        lucide.createIcons();
-    </script>
+        // بدء الـ Loading
+        btn.disabled = true;
+        loader.style.display = "block";
+        btnText.innerText = "جاري المعالجة...";
+
+        // محاكاة رفع البيانات (2 ثانية)
+        setTimeout(() => {
+            btn.disabled = false;
+            loader.style.display = "none";
+            btnText.innerText = "نشر التحضير الآن";
+            
+            // إظهار الديالوج
+            document.getElementById('successDialog').style.display = "flex";
+            
+            // تصفير الحقول
+            document.getElementById('lessonText').value = "";
+            document.getElementById('noteText').value = "";
+        }, 2000);
+    }
+
+    function closeDialog() {
+        document.getElementById('successDialog').style.display = "none";
+    }
+
+    lucide.createIcons();
+</script>
+
 </body>
 </html>
