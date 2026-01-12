@@ -3,35 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>اختبار إشعارات FCM</title>
+    <title>تفعيل الإشعارات | اختبار</title>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;600&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        :root { --bg: #000; --fg: #fff; --border: #333; --gray: #111; --blue: #0070f3; }
+        :root { --bg: #000; --fg: #fff; --border: #333; --gray: #0a0a0a; --blue: #0070f3; }
         body { background: var(--bg); color: var(--fg); font-family: 'IBM Plex Sans Arabic', sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; padding: 20px; }
-        .card { width: 100%; max-width: 500px; border: 1px solid var(--border); padding: 30px; border-radius: 8px; text-align: center; }
-        h1 { font-size: 20px; margin-bottom: 20px; }
-        .btn { background: var(--fg); color: var(--bg); border: none; padding: 12px 24px; border-radius: 6px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
-        #tokenArea { margin-top: 25px; display: none; }
-        textarea { width: 100%; background: var(--gray); border: 1px solid var(--border); color: #888; padding: 10px; border-radius: 6px; font-size: 12px; height: 80px; resize: none; margin-top: 10px; }
-        .copy-btn { color: var(--blue); font-size: 13px; cursor: pointer; background: none; border: none; margin-top: 5px; }
+        .card { width: 100%; max-width: 450px; border: 1px solid var(--border); padding: 40px; border-radius: 12px; text-align: center; background: var(--gray); }
+        .btn { background: var(--fg); color: var(--bg); border: none; padding: 14px 28px; border-radius: 7px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 10px; transition: 0.2s; }
+        .btn:hover { opacity: 0.8; }
+        #tokenArea { margin-top: 30px; display: none; animation: fadeIn 0.5s ease; }
+        textarea { width: 100%; background: #000; border: 1px solid var(--border); color: #0070f3; padding: 12px; border-radius: 8px; font-family: monospace; font-size: 11px; height: 100px; resize: none; margin-top: 15px; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
     <div class="card">
-        <i data-lucide="bell" size="40" style="margin-bottom: 15px; color: var(--blue);"></i>
-        <h1>تفعيل إشعارات الهاتف</h1>
-        <p style="color: #666; font-size: 14px; margin-bottom: 25px;">اضغط على الزر أدناه للسماح بالإشعارات والحصول على التوكن الخاص بجهازك.</p>
+        <i data-lucide="bell-ring" size="48" style="margin-bottom: 20px; color: var(--blue);"></i>
+        <h1 style="margin-bottom: 10px;">نظام الإشعارات التجريبي</h1>
+        <p style="color: #888; font-size: 14px; margin-bottom: 30px;">اضغط لتفعيل الإشعارات واستخراج التوكن الخاص بك.</p>
         
-        <button id="authBtn" class="btn" onclick="requestPermission()">
-            تفعيل الإشعارات
+        <button id="mainBtn" class="btn" onclick="startProcess()">
+            تفعيل واستخراج التوكن
         </button>
 
         <div id="tokenArea">
-            <p style="font-size: 13px; color: #27ae60;">تم الحصول على التوكن بنجاح:</p>
-            <textarea id="fcmToken" readonly></textarea>
-            <button class="copy-btn" onclick="copyToken()">نسخ التوكن</button>
+            <p style="font-size: 13px; color: #fff;">التوكن الخاص بجهازك (FCM Token):</p>
+            <textarea id="tokenBox" readonly></textarea>
+            <p style="font-size: 11px; color: #555; margin-top: 10px;">يمكنك استخدامه الآن لإرسال إشعار تجريبي عبر Firebase Console.</p>
         </div>
     </div>
 
@@ -39,49 +39,60 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getMessaging, getToken } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging.js";
 
-        // ضع مفاتيح مشروعك هنا (Firebase Config)
+        // --- ضع بياناتك هنا ---
         const firebaseConfig = {
-            apiKey: "ضع_هنا_API_KEY",
-            authDomain: "مشروعك.firebaseapp.com",
-            projectId: "ID_مشروعك",
-            storageBucket: "مشروعك.appspot.com",
-            messagingSenderId: "ضع_هنا_ID_المرسل",
-            appId: "ضع_هنا_APP_ID"
+            apiKey: "AIzaSy...",
+            authDomain: "your-project.firebaseapp.com",
+            projectId: "your-project-id",
+            storageBucket: "your-project.appspot.com",
+            messagingSenderId: "123456789",
+            appId: "1:123456789:web:abcdef"
         };
+        const VAPID_KEY = "BK_your_public_vapid_key_here";
+        // ----------------------
 
         const app = initializeApp(firebaseConfig);
         const messaging = getMessaging(app);
 
-        window.requestPermission = async () => {
+        window.startProcess = async () => {
+            const btn = document.getElementById('mainBtn');
+            btn.innerText = "جاري المعالجة...";
+            btn.disabled = true;
+
             try {
+                // 1. طلب إذن المتصفح
                 const permission = await Notification.requestPermission();
-                if (permission === 'granted') {
-                    // ضع مفتاح VAPID Key الخاص بك هنا (تجدة في Firebase Console > Project Settings > Cloud Messaging)
-                    const token = await getToken(messaging, { 
-                        vapidKey: 'ضع_هنا_مفتاح_VAPID_العام' 
-                    });
-
-                    if (token) {
-                        document.getElementById('tokenArea').style.display = 'block';
-                        document.getElementById('fcmToken').value = token;
-                        document.getElementById('authBtn').style.display = 'none';
-                    } else {
-                        alert('لم نتمكن من الحصول على التوكن، تأكد من إعدادات VAPID');
-                    }
-                } else {
-                    alert('تم رفض إذن الإشعارات');
+                if (permission !== 'granted') {
+                    throw new Error('تم رفض إذن الإشعارات من قبل المستخدم.');
                 }
-            } catch (error) {
-                console.error('حدث خطأ:', error);
-                alert('خطأ: تأكد من تشغيل الموقع عبر HTTPS');
-            }
-        };
 
-        window.copyToken = () => {
-            const copyText = document.getElementById("fcmToken");
-            copyText.select();
-            document.execCommand("copy");
-            alert("تم نسخ التوكن بنجاح");
+                // 2. تسجيل الـ Service Worker والتأكد من وجود الملف
+                // ملاحظة: تأكد من رفع ملف firebase-messaging-sw.js بجانب هذا الملف
+                const registration = await navigator.serviceWorker.register('./firebase-messaging-sw.js', {
+                    scope: './'
+                });
+
+                // 3. جلب التوكن
+                const token = await getToken(messaging, { 
+                    vapidKey: VAPID_KEY,
+                    serviceWorkerRegistration: registration
+                });
+
+                if (token) {
+                    document.getElementById('tokenArea').style.display = 'block';
+                    document.getElementById('tokenBox').value = token;
+                    btn.style.display = 'none';
+                    console.log('FCM Token:', token);
+                } else {
+                    throw new Error('فشل الحصول على التوكن. تحقق من إعدادات VAPID.');
+                }
+
+            } catch (error) {
+                alert('خطأ: ' + error.message);
+                console.error(error);
+                btn.innerText = "حاول مرة أخرى";
+                btn.disabled = false;
+            }
         };
 
         lucide.createIcons();
